@@ -1,0 +1,70 @@
+<div>
+
+    <ul class="nav nav-tabs nav-fill">
+        <li class="nav-item">
+            <a class="nav-link  text-danger" aria-current="page" href="#usuarios"  data-bs-toggle="tab">Usuarios</a> <!-- Rojo -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="#productos" data-bs-toggle="tab">productos</a> <!-- Azul -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active text-success" href="#alertas" data-bs-toggle="tab">Alertas</a> <!-- Verde -->
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning" href="#pdf" data-bs-toggle="tab">Reportes PDF</a> <!-- Amarillo -->
+        </li>
+    </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fate show mt-2" id="usuarios" >
+                {% include  'profile/admin_user.html' %}
+            </div>
+            <div class="tab-pane fate show   mt-2" id="productos">
+                {% include  'profile/admin_productos.html' %}
+            </div>
+            <div class="tab-pane fate active  show mt-2" id="alertas">
+                
+<div class="alert alert-primary bg-secondary text-white" role="alert">
+    <ol class="list-group list-group-numbered">
+       <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+        <div class="fw-bold text-danger">
+            <a href="#pedidos" class="text-danger text-decoration-none">Pedidos</a>
+        </div>
+        <a href="{% url 'not_shipped_dash' %}" class="text-danger text-decoration-none">Ir a pedidos</a>
+    </div>
+    <span class="badge text-bg-primary rounded-pill">{{ pending_orders_count }}</span>
+</li>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold text-success">
+              <a href="#productos" class="text-success text-decoration-none">Productos por agotarse</a>
+            </div>
+            <a href="{% url 'productos_por_agotarse' %}" class="text-success text-decoration-none">Ir a productos por agotarse</a>
+          </div>
+          <span class="badge text-bg-primary rounded-pill">{{ low_stock_count }}</span>
+        </li>
+
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold text-warning">
+              <a href="{% url 'elimina' %}" class="text-warning text-decoration-none">Eliminar Usuarios</a>
+            </div>
+            <a href="{% url 'elimina' %}" class="text-warning text-decoration-none">Ir a eliminar usuarios</a>
+          </div>
+          <span class="badge text-bg-primary rounded-pill">{{ estado_cuenta_count }}</span>
+        </li>
+      </ol>
+</div>
+
+
+
+            </div>
+            <div class="tab-pane fate show  mt-2" id="pdf">
+                <h4>Reportes PDF</h4>
+            </div>
+        </div>
+</div>
+
+

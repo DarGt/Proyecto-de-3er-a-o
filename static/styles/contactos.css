@@ -1,0 +1,33 @@
+.contacto {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+    padding: 10px;
+    margin-bottom: 20px; /* Espacio entre cada elemento de contacto */
+    text-align: center;
+    color: black;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.icono {
+    width: 250px; /* Ajusta el tamaño de la imagen */
+    height: 250px;
+    margin-right: 20px; /* Espacio entre la imagen y el texto */
+    
+}
+.info{
+    display: flex;
+    flex-direction: column;
+}
+.nombre, .correo, .telefono{
+    display: block;
+    margin-bottom: 5px;
+}
+.contenedor-contactos{
+    display: flex;
+    gap: 20px;
+}
+.columna{
+    flex: 1;
+}

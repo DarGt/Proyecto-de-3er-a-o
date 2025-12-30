@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+ 
+    <link rel="stylesheet" href="{% static '/styles/estilos_23.css'%}">
+<div class="offer-box">
+    <h2 class="offer-title">Quiénes somos</h2>
+    
+    <p class="offer-text">
+        Somos una tienda online de confianza que ofrece una amplia gama de productos de ferretería, hogar y construcción. Con opciones de envío rápido y seguro, Ferro Autos Barrancas se compromete a proporcionar productos de alta calidad a precios accesibles. Te conectamos con grandes marcas, importadores, fabricantes y mayoristas.
+    </p>
+    <p class="offer-discount">Tu primera compra con <strong>10% descuento</strong></p>
+    <a href="{% url 'register' %}" class="btn btn-primary">Registrarte</a>
+</div>
+
+    <!-- Primer rectángulo dividido en 3 partes -->
+    <div class="rectangulo-redes">
+        <div class="rectangulo-redes-img izq"></div>
+        <div class="rectangulo-redes-centro">
+            <h3>Síguenos</h3>
+            <div class="redes-sociales">
+                <a href="#" class="icon facebook"><i class='bx bxl-facebook'></i></a>
+<a href="#" class="icon twitter"><i class='bx bxl-twitter'></i></a>
+<a href="#" class="icon instagram"><i class='bx bxl-instagram-alt'></i></a>
+
+            </div>
+        </div>
+        <div class="rectangulo-redes-img der"></div>
+    </div>
+<!-- Segundo rectángulo blanco dividido en 3 partes -->
+<div class="rectangulo-info">
+    <div class="info-logo">
+        <span class="logo-text">Ferro Autos Barrancas</span>
+        <span class="proveedor">Tu proveedor de confianza</span>
+    </div>
+    <div class="info-descripcion">
+        Somos una ferretería online y física que ofrece una amplia gama de productos.<br>
+        Nuestro objetivo es proporcionar todo lo necesario para tus proyectos.
+    </div>
+    <div class="info-ubicacion">
+        <strong>Ubícanos aquí:</strong>
+        <span class="direccion">
+            Táchira, San Cristóbal, Barrancas Parte Alta,<br>
+            Calle Principal, al lado de la parada de Santa Teresa.
+        </span>
+        <div class="cuadro-mapa">
+    <a href="https://www.google.com/maps/place/Barrancas+Parte+Alta,+San+Cristóbal,+Táchira,+Venezuela" target="_blank">
+        <img  src="{% static '/img/premium_photo-1682310071124-33632135b2ee.jpeg'  %}" alt="Ubicación Barrancas Parte Alta" class="mapa-img">
+    </a>
+</div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+

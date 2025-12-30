@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow-lg">
+        <div class="card-header text-center" style="background-color: #d1ecf1;">
+          <h4 class="mb-0 text-dark">Información del Producto</h4>
+        </div>
+        <div class="card-body">
+          <form enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            {% for campo in producto_form %}
+              <div class="mb-4">
+                <label for="{{ campo.id_for_label }}" class="form-label fw-bold">{{ campo.label }}</label>
+
+                {% if campo.name in 'imagen1 imagen2 imagen3 imagen4' %}
+                  {% if campo.value %}
+                    <div class="mb-2">
+                      <img src="{{ campo.value.url }}" alt="Vista previa" class="img-thumbnail shadow-sm" style="max-height: 150px;">
+                    </div>
+                  {% endif %}
+                {% endif %}
+
+                {{ campo }}
+                <div class="text-danger small mt-1">{{ campo.errors }}</div>
+              </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-between mt-4">
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle-fill"></i> Guardar cambios
+              </button>
+              <a href="{% url 'productos' %}" class="btn btn-outline-primary">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br><br>
+{% endblock %}

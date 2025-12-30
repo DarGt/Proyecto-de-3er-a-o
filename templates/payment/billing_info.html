@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #d1ecf1;"> <!-- Fondo azul claro -->
+                    <h3 class="mb-0 text-dark">Resumen de pedido</h3> <!-- Texto en negro -->
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Nombre de producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {% for producto in cart_products %}
+                            <tr>
+                                
+                                <td>{{ producto.nombre }}
+                                <td>
+                                    {% if producto.is_sale %}
+                                        <strike class="text-muted small"> ${{ producto.precio_venta }}</strike><br>
+                                        <span class="text-danger font-weight-bold"> ${{ producto.sale_price }}</span>
+                                    {% else %}
+                                        ${{ producto.precio_venta }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for key, value in quantities.items %}
+                                        {% if key == producto.id_producto|slugify %}
+                                            {{ value }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-4">
+                        <h3 class="text-success font-weight-bold">Total a pagar: ${{ totals }}</h3>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'cart_summary' %}" class="btn btn-warning">Retornar a carrito</a> <!-- Botón amarillo -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #d1ecf1;"> <!-- Fondo azul claro -->
+                    <h3 class="mb-0 text-dark">Información de Facturaciòn</h3> <!-- Título -->
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Nombre completo:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_full_name }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Correo electrónico:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_email }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Dirección:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_address1 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Ciudad:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_city }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Estado:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_state }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">Código postal:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_zipcode }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                                <strong class="text-dark">País:</strong>
+                                <span class="text-muted">{{ shipping_form_data.shipping_country }}</span>
+                            </div>
+                            <br> <br>
+                            <div class="card mx-auto p-3" style="max-width: 900px;">
+                   
+                                <a href="{% url 'checkout' %}" class="btn btn-secondary">Cambiar datos de envío</a> <!-- Botón gris -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Div oculto -->
+            <div class="card shadow-lg d-none">
+                <div class="card-body">
+                    <form method="post" action="{% url 'process_order' %}" id="register-form">
+                        {% csrf_token %}
+                    </form>
+                </div> <!-- Cierre del div.card-body -->
+            </div> <!-- Cierre del div.card -->
+
+            <!-- Botón fuera del div oculto -->
+            <div class="text-center mt-4">
+                <button id="submit-button" type="submit" form="register-form" class="btn btn-success btn-lg w-100">
+                    Todo listo para procesar el pago
+                </button> <!-- Botón más grande y ancho -->
+            </div>
+
+        </div> <!-- Cierre del div.col-md-8 -->
+    </div> <!-- Cierre del div.row -->
+</div>
+ <!-- Cierre del div.container -->
+
+
+
+
+<br> <br> 
+<script>
+    document.getElementById('register-form').addEventListener('submit', function(event) {
+        var submitButton = document.getElementById('submit-button');
+        submitButton.disabled = true;
+
+        // Rehabilitar el botón después de 5 segundos en caso de error
+        setTimeout(function() {
+            submitButton.disabled = false;
+        }, 5000);
+    });
+  </script>
+{% endblock %}

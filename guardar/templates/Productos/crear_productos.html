@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+{% block titulo %}Crear Productos{% endblock %}
+{% block content %}
+{{error}}
+<form action="crear/productos" method="POST">
+{% csrf_token %}
+
+{{form}}
+
+<button>
+    Save
+</button>
+</form>
+{% endblock %}

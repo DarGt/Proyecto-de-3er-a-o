@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container my-3">
+    <div class="row">
+        <!-- Columna Izquierda -->
+        <div class="col-12 col-md-4">
+            <div class="card border rounded-2 shadow p-3 mb-3">
+                <div class="card-body text-center">
+                    <!-- Imagen del perfil -->
+                    <img class="img-thumbnail rounded-circle mb-3" src="{{ user.profile.image.url }}" alt="{{ user.username }}" style="width: 100px;">
+                    
+                    <!-- Nombre del usuario -->
+                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>                  
+                    <!-- Grupo y color -->
+                    <h5><span class="badge {{ color }}">{{ group_name_singular }}</span></h5>
+                    <hr>
+                    <!-- Información del perfil -->
+                    <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+                    <p><strong>Domicilio:</strong> {{ user.profile.address }}</p>
+                    <p><strong>Localidad:</strong> {{ user.profile.location }}</p>
+                    <p><strong>Ciudad:</strong> {{ user.profile.city }}</p>
+                    <p><strong>Estado:</strong> {{ user.profile.state }}</p>
+                    <p><strong>Pais:</strong> {{ user.profile.country }}</p>
+                    <p><strong>Codigo Postal:</strong> {{ user.profile.zipcode }}</p>
+                    <p><strong>Teléfono:</strong> {{ user.profile.telephone }}</p>
+                    <p><strong>Correo:</strong> {{ user.email }}</p>
+
+                    <hr>
+
+                    <!-- Botones de acción -->
+                    {% if nombre_d_grupo == "administrativos" %}
+                        <a class="btn btn-warning w-100 mb-2" href="{% url 'admin:index' %}">
+                            <i class="bi bi-gear"></i> Ir al admin
+                        </a>
+                    {% endif %}
+                    <a class="btn btn-secondary w-100 mb-2" href="{% url 'password' %}">
+                        <i class="bi bi-gear"></i> cambiar contraseña
+                    </a>
+
+
+                    <button type="button" class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#EditarPerfil">
+                        <i class="bi bi-pencil-square"></i> Editar Perfil
+                    </button>
+
+                    <button type="button" class="btn btn-outline-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#Editarenvio">
+                        <i class="bi bi-pencil-square"></i> Dirección de envío
+                    </button>
+                    
+                    
+                    <a class="btn btn-outline-danger w-100" href="{% url 'cerrar_sesion' %}">
+                        Cerrar sesión
+                    </a>
+                </div>                
+            </div>
+        </div>
+        
+        <!-- Columna Derecha -->
+        <div class="col-12 col-md-8">
+            <div class="card border rounded-2 shadow p-3 mb-3">
+                <div class="card-body">
+                    
+                    {% if nombre_d_grupo == "usuarios" %}
+                        {% include 'profile/usuarios.html' %}
+                    {% elif nombre_d_grupo == "caja" %}
+                        {% include 'profile/caja.html' %}
+                    {% elif nombre_d_grupo == "almacen" %}
+                        {% include 'profile/almacen.html' %}
+                    {% elif nombre_d_grupo == "administrativos" %}
+                        {% include 'profile/administrativos.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditarPerfil" tabindex="-1" aria-labelledby="EditarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Cambié a modal-lg para que sea más ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="EditarPerfilLabel">Editar Perfil</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="user_form"> <!-- Identificador del formulario -->
+                <div class="modal-body">
+                    <!-- Imagen de perfil -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <img class="img-thumbnail rounded-circle" src="{{user.profile.image.url}}" alt="{{user.username}}" style="width: 120px;">
+                    </div>
+                    <div class="mb-4 text-center">
+                        <label for="image">Imagen de perfil</label>
+                        <input class="form-control" type="file" name="image" id="image">
+                    </div>
+                    
+                    <!-- Primera fila: Nombre, Apellido -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="first_name">Nombre:</label>
+                            <input type="text" class="form-control" name="first_name" value="{{user.first_name}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name">Apellido:</label>
+                            <input type="text" class="form-control" name="last_name" value="{{user.last_name}}">
+                        </div>
+                    </div>
+                    
+                    <!-- Segunda fila: Teléfono, Código Postal -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="telephone">Teléfono:</label>
+                            <input type="text" class="form-control" name="telephone" value="{{user.profile.telephone}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="zipcode">Código Postal:</label>
+                            <input type="text" class="form-control" name="zipcode" value="{{user.profile.zipcode}}">
+                        </div>
+                    </div>
+                    
+                    <!-- Espaciado y siguientes datos -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="address">Domicilio:</label>
+                            <input type="text" class="form-control" name="address" value="{{user.profile.address}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="location">Localidad:</label>
+                            <input type="text" class="form-control" name="location" value="{{user.profile.location}}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="city">Ciudad:</label>
+                            <input type="text" class="form-control" name="city" value="{{user.profile.city}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state">Estado:</label>
+                            <input type="text" class="form-control" name="state" value="{{user.profile.state}}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="country">País:</label>
+                        <input type="text" class="form-control" name="country" value="{{user.profile.country}}">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email">Correo:</label>
+                        <input type="text" class="form-control" name="email" value="{{user.email}}" disabled>
+                    </div>
+                </div>
+
+                <!-- Botones al final -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="Editarenvio" tabindex="-1" aria-labelledby="Editarenvio" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Cambié a modal-lg para que sea más ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="Editarenvio">Editar direccion de envio</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="shipping_form"> <!-- Identificador del formulario -->
+                <div class="modal-body">
+                    <!-- Imagen de perfil -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <img class="img-thumbnail rounded-circle" src="{{user.profile.image.url}}" alt="{{user.username}}" style="width: 120px;">
+                    </div>
+
+                    <!-- Primera fila: Nombre, Apellido -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="shipping_full_name">Nombre Completo:</label>
+                            <input type="text" class="form-control" name="shipping_full_name" value="{{ user.shippingaddress.shipping_full_name }}">
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Segunda fila: Teléfono, Código Postal -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            
+                            <label for="telephone">Teléfono:</label>
+                            <input type="text" class="form-control" name="telephone" value="{{user.profile.telephone}}" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <label for="shipping_zipcode">Código Postal:</label>
+                             
+                            <input type="text" class="form-control" name="shipping_zipcode" value="{{ user.shippingaddress.shipping_zipcode }}">
+                        </div>
+                    </div>
+                    
+                    <!-- Espaciado y siguientes datos -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            
+                            <label for="shipping_address1">Domicilio:</label>
+                            <input type="text" class="form-control" name="shipping_address1" value="{{user.shippingaddress.shipping_address1}}">
+                        </div>
+                        
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="shipping_city">Ciudad:</label>
+                            <input type="text" class="form-control" name="shipping_city" value="{{user.shippingaddress.shipping_city}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shipping_state">Estado:</label>
+                            <input type="text" class="form-control" name="shipping_state" value="{{user.shippingaddress.shipping_state}}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="shipping_country">País:</label>
+                        <input type="text" class="form-control" name="shipping_country" value="{{user.shippingaddress.shipping_country}}">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="shipping_email">Correo:</label>
+                        <input type="text" class="form-control" name="shipping_email" value="{{user.email}}" readonly>
+                    </div>
+                </div>
+
+                <!-- Botones al final -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+ 
+{% endblock %}

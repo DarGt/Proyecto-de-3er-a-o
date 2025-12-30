@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Productos en Stock</title>
+    <style>
+      html, body { background: #fff; }
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        margin: 24px;
+        color: #222;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header { display:flex; align-items:center; gap:16px; border-bottom:3px solid #eee; padding-bottom:10px }
+      .logo { width:120px; height:auto }
+      .title { flex:1; text-align:center }
+      .title h1 { margin:0; color:#0b5a8a; font-size:20px }
+      .meta { text-align:right; font-size:12px; color:#666 }
+
+      table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13px }
+      th, td { padding:8px 10px; border-bottom:1px solid #eee; vertical-align:top }
+      th { text-align:left; color:#444; font-weight:700; background:none }
+      thead th { text-transform:uppercase; font-size:12px }
+      tbody tr:nth-child(even) { background:#fbfbfb }
+
+      .product-row { display:flex; gap:12px; align-items:flex-start }
+      .thumb { width:84px; height:64px; object-fit:cover; border:1px solid #e6e6e6; border-radius:6px }
+
+      .desc { max-width:320px; word-wrap:break-word; white-space:normal }
+
+      .watermark {
+        position: fixed;
+        top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+        font-size:56px; color: rgba(0,0,0,0.06); font-weight:800; letter-spacing:6px; z-index:0; pointer-events:none; white-space:nowrap
+      }
+
+      .footer { text-align:center; margin-top:18px; font-size:12px; color:#666 }
+    </style>
+  </head>
+  <body>
+    <div class="watermark">Ferro Autos Barrancas</div>
+
+    <div class="header">
+      {% if logo_url %}
+        <img src="{{ logo_url }}" alt="logo" class="logo">
+      {% else %}
+        <img src="/static/logo/LogoFerrer.png" alt="logo" class="logo">
+      {% endif %}
+      <div class="title"><h1>Productos en Stock</h1></div>
+      <div class="meta">Generado: {% now "d/m/Y H:i" %}</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Clase</th>
+          <th>Descripción</th>
+          <th>Existencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in productos_data %}
+        {% with producto=item.producto %}
+        <tr>
+          <td>
+            <div class="product-row">
+              {% if item.images and item.images.0 %}
+                <img src="{{ item.images.0 }}" class="thumb" alt="{{ producto.nombre }}">
+              {% else %}
+                <img src="/static/img/Carrito.png" class="thumb" alt="sin imagen">
+              {% endif %}
+              <div>
+                <strong>{{ producto.nombre }}</strong><br>
+                <small>ID: {{ producto.id_producto }}</small>
+              </div>
+            </div>
+          </td>
+          <td>${{ producto.precio_venta }}</td>
+          <td>{% if producto.id_clase %}{{ producto.id_clase.nombre_clase }}{% else %}-{% endif %}</td>
+          <td class="desc">{{ producto.descripcion|default:'-' }}</td>
+          <td>{{ producto.existencia }}</td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <p>Reporte generado automáticamente por el sistema.</p>
+    </div>
+  </body>
+</html>

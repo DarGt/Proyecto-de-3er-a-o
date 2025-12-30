@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<section>
+    <article>
+     <div class="slider-frame">
+         <ul>
+             <li><img src="{% static '/img/Carrusel3.jpg'  %}" alt=""></li>
+             <li><img src="{% static '/img/Carrusel4.jpg'  %}" alt=""></li>
+             <li><img src="{% static '/img/Carrusel5.jpg'  %}" alt=""></li>
+             <li><img src="{% static '/img/Carrusel3.jpg'  %}" alt=""></li>
+         </ul>
+     </div>
+    </article>
+    
+    <link rel="stylesheet" href="{% static '/styles/estilos_nav.css'%}">
+    <link rel="stylesheet" href="{% static '/styles/estilos_2.css'%}">
+
+
+
+
+    <article>
+     <h2 class="h2_2">Categoria de Productos </h2>
+     <div class="galeria">
+        <!-- despues cambiar cunado ya se tengan las categorias correctamnete definida{% url 'category'  'erramientas' %} -->
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Ferreteria.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Ferretería<br>12 productos</div>
+                 </div>
+             </div>
+         </a>
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Casa.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Casa<br>8 productos</div>
+                 </div>
+             </div>
+         </a>
+         
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Electrónico.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Electrónico<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+ 
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Autos.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Partes de vehiculos<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+ 
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Madera.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Carpinteria<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+ 
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Baño.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Productos de Baño<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+ 
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Iluminación.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Iluminacion<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+        <!-- despues cambiar cunado ya se tengan las categorias correctamnete definida{% url 'category'  'pinturas' %} -->
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Pintura.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Pinturas<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+ 
+         <a href="#">
+             <div class="image-container">
+                 <img src="{% static '/img/Erram.jpg'  %}" alt="">
+                 <div class="overlay">
+                     <div class="text">Herramientas<br>15 productos</div>
+                 </div>
+             </div>
+         </a>
+         
+     </div>
+ </article>
+ 
+ 
+ </section>
+    
+   </article>
+  </aside>
+  </div>
+
+<div class="pr">
+    
+    <h2 class="h2_1">Productos Destacados</h2>
+  <section class="products container">
+    
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+
+    <div class="card-product">
+        
+        <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+            <img src="{% static '/img/Tornillos.jpg'  %}" alt="">
+        </div>
+        <!-- Product details -->
+        <div class="product-title">
+            <h3> product.nombre</h3>
+            <p class="price">$ 213 </p>
+        </div>
+         <p> Categoría: Erramientas</p>
+        <div class="product-actions">
+            <a href="#" class="icon heart-icon"><i class='bx bxs-heart' style="color: red;"></i></a>
+            
+            <a class="add-to-cart btn " href="{% url 'carrito' %}">Ir a tienda</a>
+        </div>
+    </div>
+    
+
+    
+    <br>
+</section>
+
+<div class="offer-box">
+    <h2 class="offer-title">¡Oferta Limitada!</h2>
+    <h3 class="offer-subtitle">Edición especial</h3>
+    <p class="offer-text">
+        Aprovecha estas ediciones limitadas y da un toque exclusivo a tus proyectos con cambiar nombre. ¡No te los pierdas!
+    </p>
+    <p class="offer-discount">Tu primera compra con <strong>10% descuento</strong></p>
+    <a href="{% url 'register' %}" class="btn btn-primary">Registrarte</a>
+</div>
+
+</div>
+
+
+<div class="features-container">
+    <div class="feature">
+        <a href="#" class="icon"><i class='bx bx-world'></i></a>
+        <h3>Envíos a nivel nacional</h3>
+        <p>Recibe tus productos rápidamente y sin complicaciones, sin importar dónde te encuentres. Nuestro compromiso es asegurarnos de que tus pedidos lleguen a tiempo y en perfectas condiciones.</p>
+    </div>
+    <div class="feature">
+        <a href="#" class="icon"><i class='bx bx-badge-check'></i></a>
+        <h3>Mejor Calidad</h3>
+        <p>Trabajamos con las marcas más reconocidas y confiables del mercado para asegurar que cada artículo cumpla con los estándares más exigentes.</p>
+    </div>
+    <div class="feature">
+        <a href="#" class="icon"><i class='bx bx-purchase-tag'></i></a>
+        <h3>Buenas Ofertas</h3>
+        <p>¡No dejes pasar estas oportunidades y ahorra en tus compras con nuestras ofertas exclusivas!</p>
+    </div>
+    <div class="feature">
+        <a href="#" class="icon"><i class='bx bx-lock-alt'></i></a>
+        <h3>Seguridad al Pagar</h3>
+        <p>Puedes realizar tus compras con total confianza sabiendo que tus transacciones están protegidas contra fraudes y accesos no autorizados. Además, ofrecemos múltiples métodos de pago seguros para tu comodidad.</p>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

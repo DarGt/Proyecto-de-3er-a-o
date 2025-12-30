@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container my-3">
+    <h2>CONSULTA DE DATOS </h2>
+    <hr>
+    <div class="row">
+        <!-- Columna Izquierda -->
+        <div class="col-12 col-md-4">
+            <div class="card border rounded-2 shadow p-3 mb-3">
+                <div class="card-body text-center">
+                    <!-- Imagen del perfil -->
+                    <img class="img-thumbnail rounded-circle mb-3" src="{{ user_profile.profile.image.url }}" alt="{{ user_profile.username }}" style="width: 100px;">
+                    
+                    <!-- Nombre del usuario -->
+                    <h4>{{ user_profile.first_name }} {{ user_profile.last_name }}</h4>
+                    
+                    <!-- Grupo y color -->
+                    <h5><span class="badge {{ color_usuarios }}">{{ group_name_singular_usuarios }}</span></h5>
+
+                    <hr>
+                    
+                    <!-- Información del perfil -->
+                    <p><strong>Nombre de usuario:</strong> {{ user_profile.username }}</p>
+                    <p><strong>Domicilio:</strong> {{ user_profile.profile.address }}</p>
+                    <p><strong>Localidad:</strong> {{ user_profile.profile.location }}</p>
+                    <p><strong>Localidad:</strong> {{ user_profile.profile.location }}</p>
+                    <p><strong>Ciudad:</strong> {{ user_profile.profile.city }}</p>
+                    <p><strong>Estado:</strong> {{ user_profile.profile.state }}</p>
+                    <p><strong>Pais:</strong> {{ user_profile.profile.country }}</p>
+                    <p><strong>Codigo Postal:</strong> {{ user_profile.profile.zipcode }}</p>
+                    <p><strong>Teléfono:</strong> {{ user_profile.profile.telephone }}</p>
+                    <p><strong>Correo:</strong> {{ user_profile.email }}</p>
+
+                    
+
+                    <hr>
+
+                    <!-- Botones de acción -->
+                    {% if request.user_profile.username == "admin" %}
+                        <a class="btn btn-warning w-100 mb-2" href="{% url 'admin:index' %}">
+                            <i class="bi bi-gear"></i> Ir al admin
+                        </a>
+                    {% endif %}
+                    <button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#EditarPerfil">
+                        <i class="bi bi-pencil-square"></i> Editar Perfil
+                    </button>
+                    <!-- Botón para borrar perfil -->
+                    <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#BorrarPerfil">
+                        <i class="bi bi-trash"></i> Borrar Perfil
+                    </button>
+                    <hr>
+                    <a class="btn btn-outline-primary w-100" href="{% url 'perfil' %}">
+                        Volver atras
+                    </a>
+                </div>                
+            </div>
+        </div>
+        
+        <!-- Columna Derecha -->
+        <div class="col-12 col-md-8">
+            <div class="card border rounded-2 shadow p-3 mb-3">
+                <div class="card-body text-center">
+            
+                    {% if nombre_d_grupo_usuarios == "usuarios" %}
+                        {% include 'profile/usuarios.html' %}
+                    {% elif nombre_d_grupo_usuarios == "caja" %}
+                        {% include 'profile/caja.html' %}
+                    {% elif nombre_d_grupo_usuarios == "almacen" %}
+                        {% include 'profile/almacen.html' %}
+                    {% elif nombre_d_grupo_usuarios == "administrativos" %}
+                        {% include 'profile/administrativos.html' %}
+                    {% endif %}
+            
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="EditarPerfil" tabindex="-1" aria-labelledby="EditarPerfilLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="EditarPerfilLabel">Editar Perfil </h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        <form action="{% url 'superuser_edit' user_profile.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="modal-body">
+              <div class="d-flex">
+                <img  class="mx-auto img-thumbnail rounded-circle md-3 "src="{{user_profile.profile.image.url}}" alt="{{user_profile.username}}" style="width: 100px;">
+              </div>
+               <div class="md-3">
+                 <label for="image">Imagen de perfil</label>
+                 <input class="form-control" type="file" name="image" id="image">
+               </div>
+               <div class="d-flex">
+                <div class="mb-3 mr-2">
+                   <label for="first_name">Nombre:</label>
+                   <input type="text" class="form-control" name="first_name" value="{{user_profile.first_name}}">
+                </div>
+                <div class="mb-3 mr-2">
+                    <label for="last_name">Apellido:</label>
+                   <input type="text" class="form-control" name="last_name" value="{{user_profile.last_name}}">
+
+                </div>
+               </div>
+
+               <div class="d-flex">
+                <div class="mb-3 mr-2">
+                   <label for="address">Direcciòn:</label>
+                   <input type="text" class="form-control" name="address" value="{{user_profile.profile.address}}">
+                </div>
+                <div class="mb-3 mr-2">
+                    <label for="location">Localidad:</label>
+                   <input type="text" class="form-control" name="location" value="{{user_profile.profile.location}}" >
+                
+                </div>
+               </div>
+
+               <div class="row mb-3">
+
+                <div class="mb-3 mr-2">
+                    <label for="telephone">Telefono:</label>
+                    <input type="text" class="form-control" name="telephone" value="{{user_profile.profile.telephone}}">
+                 </div>
+                <div class="col-md-6">
+                    <label for="zipcode">Código Postal:</label>
+                    <input type="text" class="form-control" name="zipcode" value="{{user_profile.profile.zipcode}}">
+                </div>
+            </div>
+            
+            <!-- Espaciado y siguientes datos -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="address">Domicilio:</label>
+                    <input type="text" class="form-control" name="address" value="{{user_profile.profile.address}}">
+                </div>
+                <div class="col-md-6">
+                    <label for="location">Localidad:</label>
+                    <input type="text" class="form-control" name="location" value="{{user_profile.profile.location}}">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="city">Ciudad:</label>
+                    <input type="text" class="form-control" name="city" value="{{user_profile.profile.city}}">
+                </div>
+                <div class="col-md-6">
+                    <label for="state">Estado:</label>
+                    <input type="text" class="form-control" name="state" value="{{user_profile.profile.state}}">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="country">País:</label>
+                <input type="text" class="form-control" name="country" value="{{user_profile.profile.country}}">
+            </div>
+
+               <div class="d-flex">
+                <div class="mb-3 mr-2">
+                    <label for="email">Correo:</label>
+                   <input type="text" class="form-control" name="email" value="{{user_profile.email}}" disabled>
+
+                </div>
+               </div>
+               
+                <div class="mb-3">
+                    <label for="group">Grupo:</label>
+                   <select class="form-control" name="group" id="group">
+                    {% for group_name, groups_id in singular_groups %}
+                    <option value="{{groups_id}}" {% if groups_id == grupo_id_user%} selected {% endif %}>  {{group_name}}</option>
+
+                     {% endfor %}
+                   </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </form>
+
+          </div>
+        </div>
+      </div>
+ 
+</div>
+
+<!-- Modal para confirmar el borrado del perfil -->
+<div class="modal fade" id="BorrarPerfil" tabindex="-1" aria-labelledby="BorrarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="BorrarPerfilLabel">¿Estás seguro?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas borrar este perfil? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- Formulario para borrar el usuario -->
+                <form action="{% url 'eliminar_usuario' user_profile.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Sí, estoy seguro</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+{% block titulo %}Productos{% endblock %}
+{% block content %}
+
+<ul>
+    {% for Producto in productos %}
+        <li>
+            <h1>{{Producto.nombre}}</h1>
+            <p>{{Producto.id_clase}}</p>
+            <p>{{Producto.id_estado_producto}}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

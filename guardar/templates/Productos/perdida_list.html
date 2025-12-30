@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #e2e3e5;"> <!-- Fondo gris claro -->
+                    <h2 class="mb-0 text-dark">Lista de Pérdidas</h2> <!-- Título centrado y en negro -->
+                </div>
+                <div class="card-body">
+                    <div class="text-end mb-3">
+                        <a href="{% url 'perdida_create' %}" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Nueva Pérdida
+                        </a>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr class="text-dark"> <!-- Encabezados en negro -->
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for perdida in perdidas %}
+                            <tr>
+                                <td class="text-dark">{{ perdida.id_perdida }}</td>
+                                <td class="text-dark">{{ perdida.fecha }}</td>
+                                <td class="text-dark">{{ perdida.total }}</td>
+                                <td class="text-dark">{{ perdida.id_estado }}</td>
+                                <td class="text-dark">{{ perdida.descripcion }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No hay pérdidas registradas.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #d1ecf1;"> <!-- Fondo azul claro -->
+                    <h3 class="mb-0 text-dark">Confirmación de pago</h3> <!-- Título -->
+                </div>
+                <div class="card-body">
+                    <div class="border p-3 rounded" style="background-color: #f8f9fa;">
+                        <p class="text-dark text-center">
+                            Los datos para realizar el pago ya están listos. Para mayor seguridad, será redirigido a Stripe. Presione el botón para continuar con el pago.
+                        </p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <form action="{% url 'process' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg">Continuar a Stripe</button> <!-- Botón azul -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}

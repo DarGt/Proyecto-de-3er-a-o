@@ -1,0 +1,187 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/nav_22.css' %}">
+
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        {% if nombre_d_grupo == "usuarios"%}
+            <div class="carrusel_11">
+        {%  elif nombre_d_grupo == "caja"%}
+            <div class="carrusel_22">
+        {%  elif nombre_d_grupo == "almacen"%}
+            <div class="carrusel_22">
+        {%  elif nombre_d_grupo == "administrativos"%}
+            <div class="carrusel_33">
+        {% endif %}
+    {%else%}
+    <div class="carrusel_11">
+    {% endif %}
+   
+  <header class="header">
+      <div class="logo">
+          <div class="logo-text">
+              <span class="p">Ferro Autos</span>
+              <span class="p">Barrancas</span>
+          </div>
+      </div>
+      <nav>
+         <ul class="nav-links">
+            {% if not request.user.is_authenticated or nombre_d_grupo == "usuarios"%}
+
+            <li><a href="{% url 'index' %}">Principal</a></li>
+            <li><a href="{% url 'informacion' %}">Informacion</a></li>
+           
+            <li><a href="{% url 'carrito' %}">Tienda</a></li>
+            <li>
+              <form class="d-flex align-items-center">
+                  <a href="{% url 'cart_summary' %}" class="d-flex align-items-center text-white" style="text-decoration: none;">
+                      <i class='bx bxs-cart' style="font-size: 1.5rem; color: white;"></i>
+                      <span class="ms-2">Cart</span>
+                      <span class="badge bg-dark text-white ms-2 rounded-pill" id="card_quantity">{{cart|length}}</span>
+                  </a>
+              </form>
+
+              <li><a href="{% url 'compras' %}">Compras</a></li>
+            
+
+              {% elif request.user.is_authenticated and nombre_d_grupo == "caja"%}
+              <li><a href="{% url 'index' %}">Principal</a></li>
+              <li><a href="#">Pedidos</a></li>
+
+              {% elif request.user.is_authenticated and nombre_d_grupo == "almacen"%}
+              <li><a href="{% url 'not_shipped_dash' %}">Pedidos Nuevos</a></li>
+               <li><a href="{% url 'shipped_dash' %}">Pedidos Enviados</a></li>
+               <li><a class="nav-item nav-link" href="{% url 'busqueda_productos' %}">Inicio</a></li>
+               <li><a class="nav-item nav-link" href="{% url 'productos' %}">Productos</a></li>
+               <li><a class="nav-item nav-link" href="{% url 'perdida_list' %}">Pérdidas</a></li>
+               <li><a class="nav-item nav-link" href="{% url 'cantidadperdida_list' %}">Cantidad de Pérdidas</a></li>
+               <li><a class="nav-item nav-link" href="{% url 'productos_por_agotarse' %}">Productos por Agotarse</a></li>
+            {% elif request.user.is_authenticated and nombre_d_grupo == "administrativos" %}
+        
+              
+               <li></li>
+               <li><a href="{% url 'not_shipped_dash' %}">Pedidos Nuevos</a></li>
+               <li><a href="{% url 'shipped_dash' %}">Pedidos Enviados</a></li>
+              <li><a href="{% url 'perfil' %}">Usuarios</a></li>
+              
+              {% endif %}
+
+            
+              {% if request.user.is_authenticated%}          
+              <li><a href="{% url 'perfil' %}">{{user.username}}</a></li>
+              {% else %}
+              <li><a href="{% url 'ini' %}">Acceso</a></li>
+              {% endif %}
+
+              
+              
+              
+         </ul>            
+      </nav>
+      
+
+<!---->        <a onclick="openNav()" class="menu" href="#"><button>Menu</button></a>
+
+<!---->        <div id="mobile-menu" class="overlay">
+<!---->            <a onclick="closeNav()" href="" class="close">&times;</a>
+<!---->            <div class="overlay-content">
+<!---->                {% if not request.user.is_authenticated  %}
+              <a href="{% url 'index' %}">Principal</a>
+              <a href="{% url 'informacion' %}">Informacion</a>
+              <a href="{% url 'carrito' %}">Tienda</a>
+              <form class="d-flex align-items-center">
+                  <a href="{% url 'cart_summary' %}" class="d-flex align-items-center text-white" style="text-decoration: none;">
+                      <i class='bx bxs-cart' style="font-size: 1.5rem; color: white;"></i>
+                      <span class="ms-2">Cart</span>
+                      <span class="badge bg-dark text-white ms-2 rounded-pill" id="card_quantity">{{cart|length}}</span>
+                  </a>
+              </form>
+
+            {% elif request.user.is_authenticated and nombre_d_grupo == "usuarios"%}
+              <a href="{% url 'index' %}">Principal</a>
+              <a href="{% url 'informacion' %}">Informacion</a>
+              
+              <a href="{% url 'compras' %}">Compras</a></li>
+              <a href="{% url 'carrito' %}">Tienda</a>
+              <form class="d-flex align-items-center">
+                  <a href="{% url 'cart_summary' %}" class="d-flex align-items-center text-white" style="text-decoration: none;">
+                      <i class='bx bxs-cart' style="font-size: 1.5rem; color: white;"></i>
+                      <span class="ms-2">Cart</span>
+                      <span class="badge bg-dark text-white ms-2 rounded-pill" id="card_quantity">{{cart|length}}</span>
+                  </a>
+              </form>
+
+              {% elif request.user.is_authenticated and nombre_d_grupo == "caja"%}
+              <a href="{% url 'index' %}">Principal</a>
+              <a href="#">Pedidos</a></li>
+              <a href="{% url 'carrito' %}">Tienda</a>
+
+              {% elif request.user.is_authenticated and nombre_d_grupo == "almacen"%}
+              <a href="{% url 'not_shipped_dash' %}">Pedidos Nuevos</a>
+               <a href="{% url 'shipped_dash' %}">Pedidos Enviados</a>
+               <a class="nav-item nav-link" href="{% url 'busqueda_productos' %}">Inicio</a>
+               <a class="nav-item nav-link" href="{% url 'productos' %}">Productos</a>
+               <a class="nav-item nav-link" href="{% url 'perdida_list' %}">Pérdidas</a>
+               <a class="nav-item nav-link" href="{% url 'cantidadperdida_list' %}">Cantidad de Pérdidas</a>
+              <a class="nav-item nav-link" href="{% url 'productos_por_agotarse' %}">Productos por Agotarse</a>
+
+              
+            {% elif request.user.is_authenticated and nombre_d_grupo == "administrativos" %}
+              
+              <a href="{% url 'not_shipped_dash' %}">Pedidos Nuevos</a>
+              <a href="{% url 'shipped_dash' %}">Pedidos Enviados</a>
+              <a href="{% url 'perfil' %}">Usuarios</a>
+              <a href="{% url 'carrito' %}">Tienda</a>
+              
+              <a href="{% url 'admin:index' %}"> Ir al admin</a>
+
+              {% endif %}
+
+              {% if request.user.is_authenticated%}
+              
+              <a href="{% url 'perfil' %}">{{user.username}}</a>
+              {% else %}
+              <a href="{% url 'ini' %}">Acceso</a>
+
+              {% endif %}
+<!---->            </div>
+<!---->        </div>
+
+  </header>
+  <p class="texto_div">Los mejores productos </p>
+  <p class="texto_div">los puedes encontra aqui.</p>
+<a href="{% url 'carrito' %}" class="texto_div_2">
+  <i class='bx bx-store' style="font-size: 40px; margin-right: 10px;"></i> Ver Tienda
+</a>
+<!-- Social icons inside header, aligned right -->
+<div style="position:absolute; right:12px; top:12px; z-index:9999;">
+    <div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+        <a href="#" target="_blank" aria-label="Instagram">
+            <img src="{% static '/img/insta.svg' %}" style="width:44px; height:44px;" alt="Instagram">
+        </a>
+        <a href="https://wa.me/5804127048282?=Hola quiero informaciòn de su negocio" target="_blank" aria-label="WhatsApp">
+            <img src="{% static '/img/imm.svg' %}" style="width:44px; height:44px;" alt="WhatsApp">
+        </a>
+    </div>
+</div>
+
+  
+
+</div>
+</body>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor%}
+{% endif %}
+</html>
+

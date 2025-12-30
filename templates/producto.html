@@ -1,0 +1,237 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static '/styles/stylos_productos.css'%}">
+<br>
+<body>
+	<div id="content-wrapper">
+		<div class="column">
+            <img id=featured  src="{{ producto.imagen1.url }}" class="img-fluid rounded-start" alt="Imagen del producto">
+			<div id="slide-wrapper" >
+               
+				<div id="slider">
+                    <img  class="thumbnail active" src="{{ producto.imagen1.url }}" class="img-fluid rounded-start" alt="Imagen del producto">
+					<img  class="thumbnail" src="{{ producto.imagen2.url }}" class="img-fluid rounded-start" alt="Imagen del producto">
+                    <img  class="thumbnail" src="{{ producto.imagen3.url }}" class="img-fluid rounded-start" alt="Imagen del producto">
+                    <img  class="thumbnail" src="{{ producto.imagen1.url }}" class="img-fluid rounded-start" alt="Imagen del producto">					
+				</div>
+                
+			</div>
+		</div>
+		<div class="column">
+            <h1 class="card-title">{{ producto.nombre }}</h1>
+            <p> Categorías: {{ producto.id_clase }}</p>
+			<hr>
+            
+			{% if producto.is_sale %}
+                <strike>PRECIO ANTES: ${{ producto.precio_venta }}</strike>
+                &nbsp;
+                <h3>PRECIO OFERTA: ${{ producto.sale_price }}</h3>
+                {% else %}
+
+                <h3>PRECIO: ${{ producto.precio_venta }}</h3>
+                {%endif%}
+            <br>
+			<p class="card-text">Descripción: {{ producto.descripcion }}</p>
+      <hr>
+			<div class="d-flex justify-content-center align-items-center mt-3">
+   
+                <div class="me-3">
+                    
+                    <label for="qty-cart" class="me-2">Seleccione Cantidad:</label>
+                <select class="form-select form-select-sm w-auto" id="qty-cart">
+                  {% for cantidad in opciones_cantidad %}
+                   {% if cantidad <= producto.existencia %}
+                    <option value="{{ cantidad }}">{{ cantidad }}</option>
+                   {% endif %}
+                  {% endfor %}
+                </select>
+                </div>
+                <button type="button" value="{{producto.id_producto}}" class="btn btn-dark" id="add-cart">Agregar al carrito</button>
+            </div>
+            <div class="text-center mt-4">
+                <a class="btn btn-primary" href="{% url 'carrito' %}">Volver a tienda</a>
+            </div>
+            
+	</div>
+    
+</div>
+
+<br> <br>
+<h3 style="text-align:center;">Comentarios</h3>
+<div style="display:flex; flex-direction:column; align-items:center;">
+    {% if comentarios %}
+        <ul id="comentarios-lista" style="list-style:none; padding:0; width:60%;">
+        {% for comentario in comentarios|slice:":10" %}
+            <li style="background:#f5f5f5; margin:10px 0; padding:15px; border-radius:8px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <strong>{{ comentario.usuario.username }}</strong>
+                    <span>
+  {% for i in "12345"|make_list %}
+    {% if forloop.counter <= comentario.calificacion %}
+      <span style="color:gold;">&#9733;</span>
+    {% else %}
+      <span style="color:#ccc;">&#9733;</span>
+    {% endif %}
+  {% endfor %}
+</span>
+                </div>
+                <small>{{ comentario.fecha|date:"d/m/Y H:i" }}</small>
+                <p style="margin:8px 0 0 0;">{{ comentario.texto }}</p>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if comentarios|length > 10 %}
+            <div style="text-align:center;">
+                <button id="mostrar-mas" class="btn btn-secondary">Mostrar más</button>
+            </div>
+        {% endif %}
+    {% else %}
+        <p>No hay comentarios aún.</p>
+    {% endif %}
+</div>
+{% if comentario_usuario and not modo_edicion %}
+  <div style="margin:30px auto; width:60%; background:#eaf7ea; padding:20px; border-radius:8px;">
+    <h4>Tu comentario</h4>
+    <p><strong>Texto:</strong> {{ comentario_usuario.texto }}</p>
+    <p><strong>Calificación:</strong> {{ comentario_usuario.calificacion }} estrellas</p>
+    <a href="{% url 'editar_comentario' producto.id_producto %}" class="btn btn-warning">Editar</a>
+    <a href="{% url 'eliminar_comentario' producto.id_producto %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar tu comentario?')">Eliminar</a>
+  </div>
+{% endif %}
+
+
+{% if user.is_authenticated %}
+  <div style="margin:30px auto; width:60%; background:#f9f9f9; padding:20px; border-radius:8px;">
+    {% if modo_edicion %}
+      <h4>Editar comentario</h4>
+      <form method="post" action="{% url 'editar_comentario' producto.id_producto %}">
+    {% else %}
+      <h4>Agregar comentario</h4>
+      <form method="post" action="{% url 'agregar_comentario' producto.id_producto %}">
+    {% endif %}
+        {% csrf_token %}
+        <div class="mb-2">
+          <label for="usuario">Usuario:</label>
+          <input type="text" class="form-control" name="usuario" id="usuario" value="{{ user.username }}" readonly>
+        </div>
+        <div class="mb-2">
+          <label for="texto">Comentario:</label>
+          <textarea class="form-control" name="texto" id="texto" rows="2" required>{% if modo_edicion %}{{ comentario_usuario.texto }}{% endif %}</textarea>
+        </div>
+        <div class="mb-2">
+          <label for="calificacion">Calificación:</label>
+          <select class="form-select" name="calificacion" id="calificacion" required>
+  {% for i in "54321"|make_list %}
+    <option value="{{ i }}" {% if modo_edicion and comentario_usuario.calificacion|stringformat:"s" == i %}selected{% endif %}>
+      {% for j in "12345"|make_list %}
+        {% if forloop.counter <= i|add:"0" %}
+          ★
+        {% else %}
+          ☆
+        {% endif %}
+      {% endfor %}
+    </option>
+  {% endfor %}
+</select>
+
+        </div>
+        <button type="submit" class="btn btn-primary">comentar</button>
+<a href="{% url 'producto_detail' producto.id_producto %}" class="btn btn-secondary">Cancelar</a>
+
+      </form>
+  </div>
+{% else %}
+  <div class="text-center mt-4">
+    <p class="alert alert-danger d-inline-block" style="font-weight: bold;">
+      Debes iniciar sesión para comentar.
+    </p>
+  </div>
+{% endif %}
+
+
+<br><br>
+
+
+    <br>
+    <br>
+
+    <script>
+        $(document).on('click', '#add-cart', function (e) {
+    e.preventDefault();
+    console.log("Botón clickeado"); // Verifica si el evento se activa
+    $.ajax({
+        type: "POST",
+        url: "{% url 'cart_add' %}",
+        data: {
+            'product_id': $('#add-cart').val(),
+            "product_qty": $('#qty-cart option:selected').text(),
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            "action": "post"
+        },
+        success: function (json) {
+            console.log(json); // Esto debería aparecer si la solicitud es exitosa
+            document.getElementById("card_quantity").textContent = json.qty;
+            location.reload();
+        },
+        error: function (xhr, errmsg, err) {
+            console.error("Error en la solicitud AJAX:", errmsg); // Verifica si hay errores
+        }
+    });
+});
+
+
+        
+      </script>
+	<script type="text/javascript">
+        let thumbnails = document.getElementsByClassName('thumbnail');
+        let activeImages = document.getElementsByClassName('active');
+    
+        for (var i = 0; i < thumbnails.length; i++) {
+            thumbnails[i].addEventListener('mouseover', function () {
+                console.log(activeImages);
+    
+                if (activeImages.length > 0) {
+                    activeImages[0].classList.remove('active');
+                }
+    
+                this.classList.add('active');
+                let featuredImage = document.getElementById('featured');
+                if (featuredImage) {
+                    featuredImage.src = this.src;
+                }
+            });
+        }
+    </script>
+<script>
+let num_comentarios = {{ comentarios|length|default:"0" }};
+let mostrados = 10;
+document.getElementById('mostrar-mas')?.addEventListener('click', function() {
+  let items = document.querySelectorAll('#comentarios-lista li');
+  for (let i = mostrados; i < mostrados + 10 && i < num_comentarios; i++) {
+    items[i].style.display = 'block';
+  }
+  mostrados += 10;
+  if (mostrados >= num_comentarios) {
+    this.style.display = 'none';
+  }
+});
+// Oculta los comentarios extra al cargar
+window.onload = function() {
+    let items = document.querySelectorAll('#comentarios-lista li');
+    for (let i = 10; i < items.length; i++) {
+        items[i].style.display = 'none';
+    }
+};
+</script>
+</body>
+
+
+
+
+
+{% endblock %}
+

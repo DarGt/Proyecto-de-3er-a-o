@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<!-- Iterar a través de las categorías -->
+{% for categoria in categories %}
+    <a href="{% url 'category'  categoria %}">
+    <h3>{{categoria}}</h3>
+    <!-- Subcategorías correspondientes a la categoría actual -->
+    
+    </a>
+{% endfor %}
+<br><br>
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+{% block titulo %}Crear Nuevo
+Producto{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">Crear un Producto</div>
+  <div class="card-body">
+    <h4 class="card-title">Datos del Producto</h4>
+    <p class="card-text">{% include 'Productos/forms.html' %}</p>
+  </div>
+  <div class="card-footer text-muted"></div>
+</div>
+
+{% endblock %}

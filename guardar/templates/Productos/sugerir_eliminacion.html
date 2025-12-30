@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-header text-center" style="background-color: #fff3cd;"> <!-- Fondo amarillo claro -->
+          <h4 class="mb-0 text-dark">Sugerir Eliminación de Producto</h4>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="motivo" class="form-label fw-bold">Motivo de la sugerencia</label>
+              <textarea
+                class="form-control"
+                id="motivo"
+                name="motivo"
+                rows="4"
+                required
+              ></textarea>
+              <div class="form-text text-muted mt-1">Explique brevemente por qué considera que este producto debe eliminarse.</div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-send-fill"></i> Enviar Sugerencia
+              </button>
+              <a href="{% url 'productos' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+{% endblock %}

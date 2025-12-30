@@ -1,0 +1,41 @@
+<h2 style="text-align: center; color: #333;">Mensaje de Usuario de una Orden</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <tr>
+        <td><strong>Nombre y Apellido:</strong></td>
+        <td>{{ name }}</td>
+    </tr>
+    <tr>
+        <td><strong>Correo Electrónico:</strong></td>
+        <td>{{ email }}</td>
+    </tr>
+    <tr>
+        <td><strong>Asunto:</strong></td>
+        <td>{{ subject }}</td>
+    </tr>
+    <tr>
+        <td><strong>Mensaje:</strong></td>
+        <td>{{ message }}</td>
+    </tr>
+    <tr>
+        <td><strong>Dirección de Envío:</strong></td>
+        <td>{{ shipping_address }}</td>
+    </tr>
+    <tr>
+        <td><strong>Fecha de Orden:</strong></td>
+        <td>{{ date_ordered }}</td>
+    </tr>
+    {% if date_shipped %}
+    <tr>
+        <td><strong>Fecha de Envío:</strong></td>
+        <td>{{ date_shipped }}</td>
+    </tr>
+    {% endif %}
+</table>
+
+<h3 style="text-align: center; margin-top: 20px;">Detalles de la Orden</h3>
+
+
+<p style="text-align: center; font-size: 18px; margin-top: 20px;">
+    <strong>ID de la Orden:</strong> {{ order_id }} | <strong>Monto Pagado:</strong> ${{ amount_paid }}
+</p>

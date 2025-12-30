@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12"> <!-- Hacemos la tarjeta aún más ancha -->
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #d1ecf1;">
+                    <h3 class="mb-0 text-dark">Historial de Órdenes</h3>
+                </div>
+                <div class="card-body">
+
+                    <!-- Formulario de búsqueda -->
+                    <form method="GET" class="mb-3 d-flex">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Buscar por número de orden">
+                        <input type="text" name="date" class="form-control me-2" placeholder="Ej:2025-05-05">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+
+                    <!-- Mensajes de error -->
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+
+                    <!-- Tabla de órdenes -->
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Orden</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Correo Electrónico</th>
+                                <th scope="col">Fecha de Orden</th>
+                                <th scope="col">Tipo de Pago</th>
+                                <th scope="col">Estado de Envío</th>
+                                <th scope="col">Productos recibidos?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in orders %}
+                            <tr>
+                                <td><a href="{% url 'compras_usuario' item.id %}">{{ item.id }}</a></td>
+                                <td>${{ item.amount_paid }}</td>
+                                <td>{{ item.email }}</td>
+                                <td>{{ item.date_ordered }}</td>
+                                <td>
+                                    {% if item.method == "Stripe" %}
+                                        <span class="text-primary fw-bold">{{ item.method }}</span>
+                                    {% else %}
+                                        <span>{{ item.method }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.date_shipped %}
+                                        <span class="text-success fw-bold">Enviado</span>
+                                    {% else %}
+                                        <span class="text-danger fw-bold">No Enviado</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+    {% if item.date_shipped %}
+        {% if item.recibido %}
+            <a href="#" class="icon text-success"><i class='bx bx-check-circle' style="font-size: 3rem;"></i></a>
+        {% else %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="shipping_status" value="true">
+                <input type="hidden" name="num" value="{{ item.id }}">
+                <button type="submit" class="btn btn-success btn-sm">Marcar Como Recibido</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <a href="#" class="icon text-danger"><i class='bx bx-x-circle' style="font-size: 3rem;"></i></a>
+    {% endif %}
+</td>
+                            </tr>
+
+                            
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock %}

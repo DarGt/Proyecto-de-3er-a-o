@@ -1,0 +1,61 @@
+<div class="list-group">
+  <h3
+    class="list-group-item list-group-item-action bg-secondary text-white"
+    aria-current="true"
+  >
+    Funciones
+  </h3>
+  <a
+    href="http://127.0.0.1:8000/buscar/productos"
+    class="list-group-item list-group-item-action text-danger"
+    >Agregar Productos</a
+  >
+  <a href="#" class="list-group-item list-group-item-action text-success"
+    >Agregar devoluciones</a
+  >
+  <a
+    href="{% url 'generar_pdf' %}"
+    class="list-group-item list-group-item-action text-warning"
+    >Generar PDF</a
+  >
+</div>
+
+<hr />
+
+<div class="alert alert-primary bg-secondary text-white" role="alert">
+  <ol class="list-group list-group-numbered">
+    <li
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold text-danger">
+          <a href="#pedidos" class="text-danger text-decoration-none"
+            >Pedidos</a
+          >
+        </div>
+        <a
+          href="{% url 'not_shipped_dash' %}"
+          class="text-danger text-decoration-none"
+          >Ir a pedidos</a
+        >
+      </div>
+      <span class="badge text-bg-primary rounded-pill">{{ pending_orders_count }}</span>
+    </li>
+   
+    <li
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold text-success">
+          <a href="#productos" class="text-success text-decoration-none"
+            >Productos por agotarse</a
+          >
+        </div>
+        <a href="#productos" class="text-success text-decoration-none"
+          >Ir a productos por agotarse</a
+        >
+      </div>
+      <span class="badge text-bg-primary rounded-pill">{{ low_stock_count }}</span>
+    </li>
+  </ol>
+</div>

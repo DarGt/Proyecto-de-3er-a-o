@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<br><br>
+
+<div class="container">
+    {% if cart_products %}
+    {% for producto in cart_products %}
+    <div class="card mb-3 p-2 mx-auto" style="max-width: 900px;">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <img src="{{ producto.imagen1.url }}" class="img-fluid rounded-start" alt="Imagen del producto">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body text-center">
+                    {{ producto.existencia }}
+                    <h5 class="card-title">Nombre del producto: {{ producto.nombre }}</h5>
+                    <p class="card-text small">Descripción: {{ producto.descripcion }}</p>
+
+                    {% if producto.is_sale %}
+                    <strike class="text-muted small">PRECIO ANTES: ${{ producto.precio_venta }}</strike>
+                    <h5 class="text-danger">PRECIO OFERTA: ${{ producto.sale_price }}</h5>
+                    {% else %}
+                    <h5>PRECIO: ${{ producto.precio_venta }}</h5>
+                    
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="me-2">Seleccione Cantidad:</span>
+                        <select class="form-select form-select-sm w-auto" id="select{{producto.id_producto}}">
+                            {% for key, value in quantities.items %}
+                                {% if key == producto.id_producto|slugify %}
+                                <option selected>{{value}}</option>
+                                {% endif %}
+                            {% endfor %}
+                            {% if producto.existencia >= 1 %} <option value="1">1</option> {% endif %}
+                            {% if producto.existencia >= 2 %} <option value="2">2</option> {% endif %}
+                            {% if producto.existencia >= 3 %} <option value="3">3</option> {% endif %}
+                            {% if producto.existencia >= 4 %} <option value="4">4</option> {% endif %}
+                            {% if producto.existencia >= 5 %} <option value="5">5</option> {% endif %}
+                            {% if producto.existencia >= 6 %} <option value="6">6</option> {% endif %}
+                            {% if producto.existencia >= 12 %} <option value="12">12</option> {% endif %}
+                            {% if producto.existencia >= 24 %} <option value="24">24</option> {% endif %}
+                            {% if producto.existencia >= 60 %} <option value="60">60</option> {% endif %}
+                            {% if producto.existencia >= 100 %} <option value="100">100</option> {% endif %}
+                            {% if producto.existencia >= 1000 %} <option value="1000">1000</option> {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+                        <button type="button" data-index="{{producto.id_producto}}" class="btn btn-success btn-sm update-cart">Actualizar</button>
+                        <button type="button" data-index="{{producto.id_producto}}" class="btn btn-danger btn-sm delete-product">Eliminar</button>
+                    </div>
+
+                    <a class="btn btn-secondary btn-sm mt-3" href="{% url 'carrito' %}">Volver a tienda</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="text-center mt-4">
+        <div class="card mx-auto p-3" style="max-width: 900px;">
+            <h3 class="text-success">Total: ${{ totals }}</h3>
+            <a href="{% url 'checkout' %}" class="btn btn-success">Pagar</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center mt-4">
+        <h4 class="text-danger">No Tienes Nada en el Carrito</h4>
+    </div>
+    {% endif %}
+    
+</div>
+
+
+
+<script>
+    $(document).on('click', '.update-cart', function(e){
+        e.preventDefault();
+        // tomar id del producto
+        var productid = $(this).data('index');
+        var productqty = $('#select' + productid + ' option:selected').val();
+        
+        console.log("Product ID:", productid);
+        console.log("Product Quantity:", productqty);
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'cart_update' %}",
+            data: {
+                product_id: productid,
+                product_qty: productqty,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: "post"
+            },
+            success: function(json) {
+                console.log("Response:", json);
+                location.reload();
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error:", xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+
+
+</script>
+<script>
+    $(document).on('click', '.delete-product', function(e){
+        e.preventDefault();
+        // tomar id del producto
+        var productid = $(this).data('index');
+        
+        console.log("Product ID to delete:", productid);
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'cart_delete' %}",
+            data: {
+                product_id: productid,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: "post"
+            },
+            success: function(json) {
+                console.log("Delete Response:", json);
+                location.reload();
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error:", xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+</script>
+
+
+{% endblock %}

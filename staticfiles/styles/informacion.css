@@ -1,0 +1,127 @@
+/*CSS DE LA SECCION INFORMACION*/
+
+.quienes-somos {
+    text-align: center;
+    color: black;
+}
+
+.mision-vision {
+    text-align: center;
+    justify-content: center;
+}
+
+.parrafo {
+    color: black;
+    text-align: left;
+    justify-content: center;
+    margin: 0;
+}
+
+.quienes {
+    text-align: left;
+    justify-content: center;
+}
+
+.contenedor {
+    justify-content: center;
+    text-align: center;
+    transition: all 500ms ease;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+.img {
+    height: 140px; 
+    width: 750px;
+    border-radius: 25px;
+    transition: 0.5s;
+    object-fit: cover;
+}
+
+.img:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.zigzag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.zigzag:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.zigzag .texto {
+    flex: 1;
+    padding: 20px;
+    max-width: 50%;
+}
+
+.zigzag .contenedor {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 50%;
+}
+
+.zigzag .img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.zigzag h1 {
+    font-size: 70px;
+    margin-bottom: 10px;
+}
+
+.zigzag h2 {
+    font-size: 60px; 
+    margin-bottom: 10px;
+}
+
+.zigzag p {
+    font-size: 40px; 
+    line-height: 1.5;
+}
+
+
+@media (max-width: 768px) {
+    .zigzag {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .zigzag:nth-child(even) {
+        flex-direction: column;
+    }
+
+    .zigzag .texto, .zigzag .contenedor {
+        max-width: 100%;
+    }
+
+    .img {
+        width: 100%;
+        height: auto;
+    }
+
+    .zigzag h1 {
+        font-size: 30px;
+    }
+
+    .zigzag h2 {
+        font-size: 25px;
+    }
+
+    .zigzag p {
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,107 @@
+<div class="list-group">
+  <h3 class="list-group-item list-group-item-action active" aria-current="true">
+    Donde ir
+  </h3>
+  <a href="{% url 'compras' %}" class="list-group-item list-group-item-action text-danger"
+    >Ver compras</a
+  >
+  <a href="{% url 'carrito' %}" class="list-group-item list-group-item-action text-primary"
+    >ir a tienda</a
+  >
+  <a
+    href="{% url 'pdf_usuario' %}"
+    class="list-group-item list-group-item-action text-warning"
+    >Generar PDF de Usuario</a
+  >
+  <a  href="https://wa.me/5804127048282?=Hola quiero informaciòn de su negocio" target="_blank" class="list-group-item list-group-item-action text-success"
+    >comunicarse con asistencia</a
+  >
+ 
+</div>
+
+<hr />
+
+<div class="alert alert-primary" role="alert">
+  <ol class="list-group list-group-numbered">
+    <li
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold text-danger">
+          <a href="{% url 'compras' %}" class="text-danger text-decoration-none">
+            estado de tu pedidos</a
+          >
+        </div>
+        <a href="{% url 'compras' %}" class="text-danger text-decoration-none"
+          >Ir a pedidos</a
+        >
+      </div>
+      <span class="badge text-bg-primary rounded-pill">{{ user_pending_orders_count }}</span>
+    </li>
+
+
+
+    <li
+     class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <!-- Botón que abre el modal -->
+
+
+<div class="d-flex justify-content-start w-100">
+    {% if solicitud_eliminacion %}
+        <a href="#mensajes" class="text-danger text-decoration-none fw-bold text-uppercase" data-bs-toggle="modal" data-bs-target="#confirmarEliminarPerfil">
+            ¡CANCELAR ELIMINACIÓN DE CUENTA!
+        </a>
+    {% else %}
+        <a href="#mensajes" class="text-warning text-decoration-none" data-bs-toggle="modal" data-bs-target="#confirmarEliminarPerfil">
+              ¡ Ir a eliminar perfil !
+        </a>
+    {% endif %}
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmarEliminarPerfil" tabindex="-1" aria-labelledby="confirmarEliminarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarEliminarPerfilLabel">Confirmar eliminación de perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            {% if solicitud_eliminacion %}
+    <div class="alert alert-warning">
+        <b>¡Solicitud de eliminación en proceso!</b><br>
+        Puedes cancelar la solicitud antes de que pasen los 15 días.
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="cancel_delete_request" value="true">
+        <button type="submit" class="btn btn-secondary">Cancelar solicitud de eliminación</button>
+    </form>
+{% else %}
+    <form method="POST">
+        <div class="modal-body">
+            {% csrf_token %}
+            <p>¿Estás seguro de que deseas eliminar tu perfil? Si procedes, todos tus datos de cuenta, historial de compras y cualquier actividad interna se perderán permanentemente.</p>
+            <p>Este proceso tiene un período de espera de <b>15 días</b>. Si cancelas la solicitud antes de que finalice este plazo, tu perfil no será eliminado.</p>
+            <label for="motivoBorrado" class="form-label">Motivo de eliminación (opcional):</label>
+            <textarea class="form-control" id="motivoBorrado" name="motivoBorrado" rows="3" placeholder="Escribe el motivo si lo deseas..."></textarea>
+            <input type="hidden" name="delete_request" value="true">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Sí, solicitar eliminación</button>
+        </div>
+    </form>
+    <br>
+{% endif %}
+ <br>
+        </div>
+    </div>
+</div>
+
+      {% if solicitud_eliminacion %}
+    <span class="badge text-bg-danger rounded-pill">¡</span>
+{% endif %}
+    </li>
+  </ol>
+</div>

@@ -1,0 +1,220 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib import messages
+from .forms import ProductosForm, PerdidaForm, CantidadPerdidaForm, DetalleProveedorForm
+from .models import Producto, SugerenciaEliminacion, Perdida, CantidadPerdida, DetalleProveedor
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from core.views import add_group_name_to_context
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.templatetags.static import static
+
+class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return user.is_authenticated and (user.groups.filter(name__in=["almacen", "administrativos"]).exists() or user.is_superuser)
+    def handle_no_permission(self):
+        messages.error(self.request, "No tienes permiso para acceder a esta página.")
+        return redirect('index')
+
+@add_group_name_to_context
+class SugerirEliminacionView(View):
+    @method_decorator(login_required)
+    def get(self, request, producto_id):
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+        context = {'producto': producto}
+        # Agrega el contexto extra manualmente
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        return render(request, 'Productos/sugerir_eliminacion.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request, producto_id):
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+        motivo = request.POST.get('motivo')
+        SugerenciaEliminacion.objects.create(
+            producto=producto, usuario=request.user, motivo=motivo)
+        messages.success(
+            request, 'Sugerencia de eliminación enviada al administrador.')
+        return redirect('productos')
+
+
+@add_group_name_to_context
+class IndexView(AdminOrAlmacenistaRequiredMixin, TemplateView):
+    template_name = 'Productos/index.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productos'] = Producto.objects.all()
+        return context
+
+@add_group_name_to_context
+class ProductosView(AdminOrAlmacenistaRequiredMixin, TemplateView):
+    template_name = 'Productos/productos.html'
+
+@add_group_name_to_context
+class DetallesProductoView(AdminOrAlmacenistaRequiredMixin, TemplateView):
+    template_name = 'Productos/detalles_producto.html'
+
+@add_group_name_to_context
+class CrearProductosView(AdminOrAlmacenistaRequiredMixin, View):
+    @method_decorator(login_required)
+    def get(self, request):
+        producto_form = ProductosForm()
+        context = {'producto_form': producto_form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        return render(request, 'Productos/forms.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        producto_form = ProductosForm(request.POST, request.FILES)
+        context = {'producto_form': producto_form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        if producto_form.is_valid():
+            producto_form.save()
+            messages.success(request, 'Producto creado exitosamente.')
+            return redirect('productos')
+        return render(request, 'Productos/forms.html', context)
+
+@add_group_name_to_context
+class EditarProductosView(AdminOrAlmacenistaRequiredMixin, View):
+    @method_decorator(login_required)
+    def get(self, request, producto_id):
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+        formulario = ProductosForm(instance=producto)
+        context = {'producto_form': formulario}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        return render(request, 'Productos/forms.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request, producto_id):
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+        formulario = ProductosForm(request.POST, request.FILES, instance=producto)
+        context = {'producto_form': formulario}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('productos')
+        return render(request, 'Productos/forms.html', context)
+
+@add_group_name_to_context
+class BusquedaProductosView(TemplateView):
+    template_name = 'Paginas/busqueda_produc.html'
+
+@add_group_name_to_context
+class EliminarProductosView(AdminOrAlmacenistaRequiredMixin, View):
+    @method_decorator(login_required)
+    def post(self, request, id):
+        producto = get_object_or_404(Producto, id_producto=id)
+        producto.delete()
+        messages.success(request, "Producto eliminado exitosamente.")
+        return redirect('productos')
+
+@add_group_name_to_context
+class GenerarPDFView(View):
+    def get(self, request, *args, **kwargs):
+        productos = Producto.objects.filter(existencia__gt=0)
+        # construir URLs absolutas para logo y para las imágenes de cada producto
+        logo_url = request.build_absolute_uri(static('logo/LogoFerrer.png'))
+
+        productos_data = []
+        for p in productos:
+            image_urls = []
+            for img_field in ('imagen1', 'imagen2', 'imagen3', 'imagen4'):
+                img = getattr(p, img_field, None)
+                if img and getattr(img, 'url', None):
+                    try:
+                        image_urls.append(request.build_absolute_uri(img.url))
+                    except Exception:
+                        # omitir si no es accesible
+                        pass
+            productos_data.append({'producto': p, 'images': image_urls})
+
+        html_string = render_to_string(
+            'Productos/pdf_template.html', {'productos_data': productos_data, 'logo_url': logo_url})
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="productos_en_stock.pdf"'
+        HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf(response)
+        return response
+    
+    
+@add_group_name_to_context
+class ProductosPorAgotarseView(TemplateView):
+    template_name = 'profile/productos_por_agotarse.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        LIMITE_STOCK = 5  # Puedes ajustar este valor
+        context['productos_agotandose'] = Producto.objects.filter(existencia__lte=LIMITE_STOCK, is_active=True)
+        return context
+
+@add_group_name_to_context
+class PerdidaListView(TemplateView):
+    template_name = 'Productos/perdida_list.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        context['perdidas'] = Perdida.objects.all()
+        return context
+
+@add_group_name_to_context
+class PerdidaCreateView(AdminOrAlmacenistaRequiredMixin, View):
+    @method_decorator(login_required)
+    def get(self, request):
+        form = PerdidaForm()
+        context = {'form': form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        return render(request, 'Productos/perdida_form.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = PerdidaForm(request.POST)
+        context = {'form': form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Pérdida registrada exitosamente.')
+            return redirect('perdida_list')
+        return render(request, 'Productos/perdida_form.html', context)
+
+@add_group_name_to_context
+class CantidadPerdidaListView(TemplateView):
+    template_name = 'Productos/cantidadperdida_list.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        context['cantidades'] = CantidadPerdida.objects.all()
+        return context
+
+@add_group_name_to_context
+class CantidadPerdidaCreateView(AdminOrAlmacenistaRequiredMixin, View):
+    @method_decorator(login_required)
+    def get(self, request):
+        form = CantidadPerdidaForm()
+        context = {'form': form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        return render(request, 'Productos/cantidadperdida_form.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = CantidadPerdidaForm(request.POST)
+        context = {'form': form}
+        if hasattr(self, 'extra_context'):
+            context.update(self.extra_context)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cantidad de pérdida registrada exitosamente.')
+            return redirect('cantidadperdida_list')
+        return render(request, 'Productos/cantidadperdida_form.html', context)

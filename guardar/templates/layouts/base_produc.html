@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>{% block titulo %} {% endblock %}</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <style>
+  .navbar {
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    font-size: 1.25rem;
+  }
+  .navbar-brand {
+    font-size: 2rem !important;
+  }
+  .navbar-nav .nav-link {
+    font-size: 1.2rem;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+</style>
+  </head>
+  
+
+  <body>
+    
+   
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{% url 'busqueda_productos' %}">Ferretería Barrancas</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav me-auto mb-2 mb-lg-0">
+        <a class="nav-item nav-link" href="{% url 'busqueda_productos' %}">Inicio</a>
+        <a class="nav-item nav-link" href="{% url 'productos' %}">Productos</a>
+        <a class="nav-item nav-link" href="{% url 'perdida_list' %}">Pérdidas</a>
+        <a class="nav-item nav-link" href="{% url 'cantidadperdida_list' %}">Cantidad de Pérdidas</a>
+        <a class="nav-item nav-link" href="{% url 'productos_por_agotarse' %}">Productos por Agotarse</a>
+      </div>
+      <form class="d-flex" action="{% url 'busqueda_productos' %}" method="GET">
+      </form>
+    </div>
+  </div>
+</nav>
+    
+   
+  
+
+<div class="container py-4" style="background: #f8f9fa; min-height: 80vh;">
+  <div class="row">
+    <div class="col-12">
+      <br/>
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+    <footer class="bg-light text-center py-3 mt-4 border-top">
+      <span class="text-muted">Ferretería Barrancas &copy; {{ now|date:"Y" }}</span>
+  </body>
+</html>

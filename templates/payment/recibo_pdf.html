@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo de Compra - Ferro Autos Barrancas</title>
+    <style>
+        html, body {
+            background: #ffffff; /* fondo blanco para evitar franjas grises en PDF */
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 13px;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: #fff;
+            max-width: 650px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 32px 40px 24px 40px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .logo {
+            height: 60px;
+        }
+        .nombre-ferreteria {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4f46e5;
+            letter-spacing: 1px;
+            margin-left: 15px;
+        }
+        .titulo {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+        .info {
+            margin-bottom: 18px;
+        }
+        .info-table {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+        .info-table td {
+            padding: 4px 8px;
+            vertical-align: top;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #4f46e5;
+            margin: 18px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        th {
+            background: #6366f1;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background: #f3f4f6;
+        }
+        .total {
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 11px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="Logo Ferretería Barrancas" class="logo">
+            {% else %}
+                <img src="{% static 'logo/LogoFerrer.png' %}" alt="Logo Ferretería Barrancas" class="logo">
+            {% endif %}
+            <span class="nombre-ferreteria">Ferro Autos Barrancas</span>
+        </div>
+        <div class="titulo">Recibo de Compra</div>
+        <hr>
+        <table class="info-table">
+            <tr>
+                <td><strong>Orden:</strong></td>
+                <td>{{ order.id }}</td>
+                <td><strong>Fecha de orden:</strong></td>
+                <td>{{ order.date_ordered|date:"d/m/Y H:i" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Nombre:</strong></td>
+                <td>{{ order.full_name }}</td>
+                <td><strong>Correo:</strong></td>
+                <td>{{ order.email }}</td>
+            </tr>
+            <tr>
+                <td><strong>Dirección de envío:</strong></td>
+                <td colspan="3">{{ order.shipping_address }}</td>
+            </tr>
+            {% if order.date_shipped %}
+            <tr>
+                <td><strong>Fecha de envío:</strong></td>
+                <td>{{ order.date_shipped|date:"d/m/Y H:i" }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endif %}
+        </table>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in items_data %}
+                {% with item=d.item %}
+                <tr>
+                    <td style="display:flex;gap:10px;align-items:center">
+                        {% if d.product_image %}
+                            <img src="{{ d.product_image }}" style="width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #e5e7eb" alt="thumb">
+                        {% endif %}
+                        <div>
+                            <strong>{{ item.product.nombre }}</strong><br>
+                            <small>ID: {{ item.product.id_producto }}</small>
+                        </div>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price|floatformat:2 }}</td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="total">
+            Total pagado: ${{ order.amount_paid|floatformat:2 }}
+        </div>
+        <div class="footer">
+            ¡Gracias por su compra!<br>
+            Ferretería Barrancas - {{ order.date_ordered|date:"Y" }}
+        </div>
+    </div>
+    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:56px;color:rgba(0,0,0,0.06);font-weight:800;pointer-events:none;z-index:0;white-space:nowrap">Ferro Autos Barrancas</div>
+</body>
+</html>
+{% comment %}
+    Este es un recibo de compra para la Ferretería Barrancas.
+    Asegúrate de que los datos de la orden y los artículos se pasen correctamente desde la vista.
+{% endcomment %}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+    <style>
+        /* Base */
+        html, body { background: #fff; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 30px;
+            color: #333;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Encabezado parecido al sitio */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 4px solid #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .logo {
+            width: 110px;
+            height: auto;
+        }
+
+        .title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .title h1 {
+            margin: 0;
+            color: #0b5a8a; /* tono diferente, más profesional */
+            font-size: 22px;
+        }
+
+        .meta {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Contenido */
+        .profile {
+            display: flex;
+            gap: 20px;
+            margin-top: 18px;
+            align-items: flex-start;
+            z-index: 2;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 6px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        th {
+            width: 28%;
+            color: #444;
+            font-weight: 600;
+            background: none;
+        }
+
+        /* Sección de título de sección */
+        .section-title {
+            margin-top: 20px;
+            font-size: 15px;
+            color: #0b5a8a;
+            font-weight: 700;
+        }
+
+        /* Marca de agua */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 64px;
+            color: rgba(0,0,0,0.06);
+            font-weight: 800;
+            letter-spacing: 6px;
+            z-index: 0;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Ajustes para impresión/PDF: asegurar que la marca de agua aparezca detrás */
+        @media print {
+            .watermark { color: rgba(0,0,0,0.06); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="watermark">Ferro Autos Barrancas</div>
+
+    <div class="header">
+        {# Logo opcional: usa logo_url pasado desde la vista si existe, si no usa static por defecto #}
+        {% if logo_url %}
+            <img src="{{ logo_url }}" alt="logo" class="logo" onerror="this.style.display='none'">
+        {% else %}
+            <img src="{% static 'logo/LogoFerrer.png' %}" alt="logo" class="logo" onerror="this.style.display='none'">
+        {% endif %}
+
+        <div class="title">
+            <h1>Ficha de Usuario — {{ usuario.username }}</h1>
+        </div>
+
+        <div class="meta">
+            Generado: {% now "d/m/Y H:i" %}
+        </div>
+    </div>
+
+    <div class="profile">
+        <div class="left">
+            {# Preferir avatar_url pasado desde la vista (URL absoluta para WeasyPrint). Si no existe, intentar image.url o default static #}
+            {% if avatar_url %}
+                <img src="{{ avatar_url }}" alt="avatar" class="avatar">
+            {% elif usuario.profile and usuario.profile.image %}
+                <img src="{{ usuario.profile.image.url }}" alt="avatar" class="avatar">
+            {% else %}
+                <img src="{% static 'img/default-user.png' %}" alt="avatar" class="avatar" onerror="this.style.display='none'">
+            {% endif %}
+        </div>
+
+        <div class="info">
+            <div class="section-title">Datos básicos</div>
+            <table>
+                <tr>
+                    <th>Nombre completo</th>
+                    <td>{{ usuario.first_name|default:'-' }} {{ usuario.last_name|default:'' }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre de usuario</th>
+                    <td>{{ usuario.username }}</td>
+                </tr>
+                <tr>
+                    <th>Correo</th>
+                    <td>{{ usuario.email|default:'-' }}</td>
+                </tr>
+                <tr>
+                    <th>Registrado desde</th>
+                    <td>{{ usuario.date_joined|date:"d/m/Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <th>Última modif.</th>
+                    <td>{% if usuario.profile and usuario.profile.date_modifile %}{{ usuario.profile.date_modifile|date:"d/m/Y" }}{% else %}-{% endif %}</td>
+                </tr>
+            </table>
+
+            <div class="section-title">Contacto y dirección</div>
+            <table>
+                <tr>
+                    <th>Teléfono</th>
+                    <td>{% if usuario.profile and usuario.profile.telephone %}{{ usuario.profile.telephone }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Dirección</th>
+                    <td>{% if usuario.profile and usuario.profile.address %}{{ usuario.profile.address }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Localidad</th>
+                    <td>{% if usuario.profile and usuario.profile.location %}{{ usuario.profile.location }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Ciudad</th>
+                    <td>{% if usuario.profile and usuario.profile.city %}{{ usuario.profile.city }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Estado</th>
+                    <td>{% if usuario.profile and usuario.profile.state %}{{ usuario.profile.state }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Código postal</th>
+                    <td>{% if usuario.profile and usuario.profile.zipcode %}{{ usuario.profile.zipcode }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>País</th>
+                    <td>{% if usuario.profile and usuario.profile.country %}{{ usuario.profile.country }}{% else %}-{% endif %}</td>
+                </tr>
+            </table>
+
+            <div class="section-title">Otros</div>
+            <table>
+                <tr>
+                    <th>Creado por admin</th>
+                    <td>{% if usuario.profile and usuario.profile.created_by_admin %}Sí{% else %}No{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Carrito antiguo</th>
+                    <td>{% if usuario.profile and usuario.profile.old_cart %}{{ usuario.profile.old_cart }}{% else %}-{% endif %}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

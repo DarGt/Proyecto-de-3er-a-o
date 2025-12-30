@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'styles/carrito2.css' %}">
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+{% endif %}
+<section class="py-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row">
+            <!-- Barra superior para el buscador -->
+            <div class="col-12">
+                <div class="card buscador-card">
+                    <div class="card-body">
+                        <form method="get" action="{% url 'carrito' %}" class="d-flex align-items-center">
+                            <input type="text" name="q" class="form-control me-3" placeholder="Buscar productos..." value="{{ query }}">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <!-- Listado de categorías -->
+            <div class="col-12">
+                <div class="card categorias-card">
+                    <div class="card-body">
+                        <h5 class="text-center mb-3">Categorías</h5>
+                        <ul class="list-unstyled d-flex justify-content-center flex-wrap">
+                            {% for categoria in clases %}
+                                <li class="mx-3">
+                                    <a href="{% url 'category' categoria %}" class="text-decoration-none">
+                                        <h6>{{ categoria.nombre_clase }}</h6>
+                                    </a>
+                                    
+                                </li>
+                                
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+
+        <!-- Listado de productos -->
+        <div class="col-lg-12">
+            {% if no_products %}
+            <div class="alert alert-warning" role="alert">
+                No se encontraron productos.
+            </div>
+            {% else %}
+            <section class="products container">
+               {% for product in products %}
+                <div class="card-product">
+                    
+                    <div class="position-relative"> <!-- Contenedor de la imagen con posición relativa -->
+                        {% if product.is_sale %}
+                        <!-- Oferta -->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Oferta</div>
+                        {% endif %}
+                        <img src="{{ product.imagen1.url }}" alt="Imagen del producto" class="product-image">
+                    </div>
+                    <!-- Product details -->
+                    <div class="product-title">
+                        <h2 class="text-white fw-bold">{{ product.nombre }}</h2>
+
+                        {% if product.is_sale %}
+                            <strike  class="price">${{ product.precio_venta }}</strike>
+                            &nbsp;${{ product.sale_price }}
+                            {% else %}
+                            <p class="price">${{ product.precio_venta }}</p>
+                            {% endif %}
+                    </div>
+                     <p> Categorías: {{ product.id_clase }}</p>
+
+                    <div class="product-actions">
+                        <!-- Botón de me gusta -->
+                        {% if user.is_authenticated %}
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                            {% if user_likes and product.id_producto in user_likes %}
+                                <button class="btn btn-like like-btn-color liked" data-product-id="{{ product.id_producto }}">&#10084;</button>
+                                <span id="like-count-{{ product.id_producto }}" class="like-count liked">{{ likes_dict.product.id_producto }}</span>
+                            {% else %}
+                                <button class="btn btn-like like-btn-color" data-product-id="{{ product.id_producto }}">&#10084;</button>
+                                <span id="like-count-{{ product.id_producto }}" class="like-count">{{ likes_dict.product.id_producto }}</span>
+                            {% endif %}
+                        </span>
+                        {% else %}
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                            <span class="like-btn-color" style="font-size:2.3rem; color:#ccc;">&#10084;</span>
+                            <span id="like-count-{{ product.id_producto }}" class="like-count">{{ likes_dict.product.id_producto }}</span>
+                        </span>
+                        {% endif %}
+
+                        <a class="add-to-cart btn " href="{% url 'producto_detail' product.id_producto %}">Ver producto</a>
+                    </div>
+                </div>
+                {% endfor %}
+                <br>
+            </section>
+            <br>
+            <!-- Paginación -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in products.paginator.page_range %}
+                    <li class="page-item {% if products.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}">Siguiente</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    
+
+
+
+
+
+<script>
+    document.querySelectorAll('.btn-like').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let productId = this.getAttribute('data-product-id');
+            let likeCountSpan = document.getElementById('like-count-' + productId);
+            fetch('/like-toggle/' + productId + '/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    this.style.color = 'red';
+                } else {
+                    this.style.color = '#ccc';
+                }
+                likeCountSpan.textContent = data.likes_count;
+            });
+        });
+    });
+</script>
+{% endblock %}

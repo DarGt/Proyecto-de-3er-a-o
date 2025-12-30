@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<body>
+  <link rel="stylesheet" href="{% static 'styles/inicio_sesion_2.css' %}">
+
+  <div class="limiter">
+    <div class="container-login100">
+      <div class="wrap-login100">
+        <form class="login100-form validate-form" method="POST" id="register-form" action="{% url 'register' %}">
+          {% csrf_token %}
+          <span class="login100-form-title p-b-43 fs-1 fw-bold text-center text-acento">
+            Regístrate para comenzar
+          </span>
+
+          <br>
+
+          <div class="formulario-registro">
+  {{ formulari_registro.as_p }}
+</div>
+
+
+          <div class="text-center p-t-10 p-b-10">
+            <a href="{% url 'password_reset' %}" class="txt1">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+<br>
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn" type="submit" id="submit-button">
+              Registrarse
+            </button>
+          </div>
+
+          <div class="text-center p-t-30">
+            <span class="txt2">¿Ya tienes una cuenta?</span>
+            <a href="{% url 'ini' %}">
+              <button type="button" class="login100-form-btn" style="background-color:#00bfa6;">
+                Inicia sesión aquí
+              </button>
+            </a>
+          </div>
+        </form>
+
+        <div class="login100-more"></div>
+
+        
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <script type="text/javascript" src="{% static 'js/inicio_sesion.js' %}"></script>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', function(event) {
+      var submitButton = document.getElementById('submit-button');
+      submitButton.disabled = true;
+
+      setTimeout(function() {
+        submitButton.disabled = false;
+      }, 5000);
+    });
+  </script>
+</body>
+
+{% endblock %}

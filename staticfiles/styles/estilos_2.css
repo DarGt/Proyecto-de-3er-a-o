@@ -1,0 +1,277 @@
+.boto{
+    background-color: #f69858; /* Gris claro */
+}
+img{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajusta el número de columnas automáticamente */
+    gap: 20px; /* Espaciado entre los productos */
+    margin-top: 20px;
+}
+.card-product{
+    background: linear-gradient(225deg, rgba(112, 112, 112, 1) 0%, rgb(117, 117, 117) 57%) !important;
+    padding: 50px 30px;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    text-align: center;
+}
+.card-product img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.card-product p {
+    text-align: left;
+
+}
+.product-title h3 {
+    color: #f5f5f5;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.price {
+    color: #f5f5f5;
+    font-weight: 900;
+}
+.product-title{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.product-button{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+
+}
+
+.fa-heart{
+    padding: 15px;
+    border-radius: 1px solid #f69858;
+    border-radius: 10px;
+}
+.fa-heart:hover{
+    background-color: #f69858;
+    cursor: pointer;
+}
+.product-button a{
+    display:flex;
+    padding: 5px 20px;
+    background-color: #f69858;
+    color: #f5f5f5;
+    text-decoration: none;
+    border-radius: 10px;
+
+}
+.product-button a:hover{
+    background-color: #f69858;
+
+}
+.product-actions {
+    display: flex;
+    justify-content: space-between; /* Coloca los elementos en extremos opuestos */
+    align-items: center; /* Alinea verticalmente los elementos */
+    margin-top: 15px; /* Espaciado superior */
+}
+
+.heart-icon {
+    font-size: 24px; /* Tamaño del ícono */
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.heart-icon:hover {
+    transform: scale(1.2); /* Efecto de agrandamiento al pasar el cursor */
+    cursor: pointer;
+}
+
+.add-to-cart {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f69858;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+    background-color: #e07a3f;
+}
+/* Estilo para el buscador */
+.buscador-card {
+    background: linear-gradient(225deg, rgba(112, 112, 112, 1) 0%, rgb(117, 117, 117) 57%);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    color: #f5f5f5;
+}
+
+/* Estilo para las categorías */
+.categorias-card {
+    background: linear-gradient(225deg, rgba(112, 112, 112, 1) 0%, rgb(117, 117, 117) 57%);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    color: #f5f5f5;
+}
+
+/* Centrar y espaciar las categorías */
+.categorias-card ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.categorias-card li {
+    display: inline-block;
+    margin: 0 15px;
+    text-align: center;
+}
+
+.categorias-card li a h6 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f5f5f5;
+    transition: color 0.3s ease;
+}
+
+.categorias-card li a h6:hover {
+    color: #007bff;
+}
+.pr {
+    background: linear-gradient(to bottom, #ffffff, #c2c2c2); /* Degradado de blanco a gris claro */
+    padding: 20px 0; /* Espaciado interno */
+}
+.h2_1 {
+    max-width: 80%; /* Limita el ancho al 80% del contenedor */
+    margin: 0 auto; /* Centra el elemento horizontalmente */
+    text-align: center; /* Centra el texto */
+    color: #4a4a4a; /* Gris oscuro */
+    font-family: 'Georgia', serif; /* Fuente rústica */
+    font-size: 2.5rem; /* Tamaño de letra más grande */
+    font-weight: bold; /* Negrita para resaltar */
+    margin-bottom: 20px; /* Espaciado inferior */
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    letter-spacing: 2px; /* Espaciado entre letras */
+    border-bottom: 4px solid #e07a3f; /* Línea debajo del texto */
+    display: block; /* Asegura que ocupe todo el ancho disponible */
+    padding-bottom: 5px; /* Espaciado entre el texto y la línea */
+}
+
+.h2_2 {
+    max-width: 80%; /* Limita el ancho al 80% del contenedor */
+    margin: 0 auto; /* Centra el elemento horizontalmente */
+    text-align: center; /* Centra el texto */
+    color: #4a4a4a; /* Gris oscuro */
+    font-family: 'Georgia', serif; /* Fuente rústica */
+    font-size: 2.5rem; /* Tamaño de letra más grande */
+    font-weight: bold; /* Negrita para resaltar */
+    margin-bottom: 20px; /* Espaciado inferior */
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    letter-spacing: 2px; /* Espaciado entre letras */
+    border-bottom: 4px solid #38d557; /* Línea debajo del texto */
+    display: block; /* Asegura que ocupe todo el ancho disponible */
+    padding-bottom: 5px; /* Espaciado entre el texto y la línea */
+}
+.offer-box {
+    position: relative;
+    border: 2px solid #e07a3f; /* Borde con color */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 80px; /* Aumenta el espaciado interno para hacerlo más largo */
+    background-image: url('/static/img/Almacen.jpg'); /* Imagen de fondo */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen de fondo */
+    color: #fff; /* Texto blanco */
+    text-align: left; /* Alinea el texto a la izquierda */
+    max-width: 95%; /* Ocupa el 95% del ancho de la página */
+    margin: 20px auto; /* Centra el rectángulo horizontalmente */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+    min-height: 400px; /* Aumenta la altura mínima del rectángulo */
+}
+
+.offer-title {
+    color: #fff; /* Blanco */
+    font-size: 2rem; /* Tamaño del título */
+    font-weight: bold; /* Negrita */
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+.offer-subtitle {
+    color: #fff; /* Blanco */
+    font-size: 1.5rem; /* Tamaño del subtítulo */
+    margin-bottom: 15px; /* Espaciado inferior */
+}
+
+.offer-text {
+    color: #fff; /* Blanco */
+    font-size: 1rem; /* Tamaño del texto */
+    margin-bottom: 15px; /* Espaciado inferior */
+}
+
+.offer-discount {
+    color: #fff; /* Blanco */
+    font-size: 1.2rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.btn-primary {
+    background-color: #fff; /* Fondo blanco */
+    color: #000; /* Texto negro */
+    padding: 10px 20px; /* Espaciado interno */
+    text-decoration: none; /* Sin subrayado */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño del texto */
+    border: 2px solid #e07a3f; /* Borde del botón */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+.btn-primary:hover {
+    background-color: #e07a3f; /* Fondo naranja al pasar el cursor */
+    color: #fff; /* Texto blanco al pasar el cursor */
+}
+
+.features-container {
+    display: flex;
+    justify-content: space-between; /* Espaciado uniforme entre los elementos */
+    align-items: flex-start;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
+    gap: 20px; /* Espaciado entre las columnas */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    padding: 20px; /* Espaciado interno */
+    background: linear-gradient(225deg, rgba(112, 112, 112, 1) 0%, rgb(117, 117, 117) 57%); /* Fondo degradado */
+    border-radius: 10px; /* Bordes redondeados para el contenedor */
+}
+
+.feature {
+    flex: 1 1 calc(25% - 20px); /* Cada columna ocupa el 25% del ancho menos el espacio del gap */
+    text-align: center; /* Centra el contenido dentro de cada columna */
+    padding: 20px; /* Espaciado interno */
+    background: none; /* Elimina el fondo de los cuadros */
+    box-shadow: none; /* Elimina la sombra */
+    border: none; /* Elimina las líneas de los cuadros */
+}
+
+.feature .icon {
+    font-size: 4rem; /* Tamaño más grande para los íconos */
+    color: #c2c2c2; /* Color gris para los íconos */
+    margin-bottom: 10px; /* Espaciado debajo del ícono */
+    display: inline-block;
+}
+
+.feature h3 {
+    font-size: 1.5rem; /* Tamaño del título */
+    color: #fff; /* Texto blanco */
+    margin-bottom: 10px; /* Espaciado debajo del título */
+}
+
+.feature p {
+    font-size: 1rem; /* Tamaño del texto */
+    color: #f5f5f5; /* Texto blanco claro */
+    line-height: 1.5; /* Espaciado entre líneas */
+}

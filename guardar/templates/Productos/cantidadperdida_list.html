@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-11 col-lg-12">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #e2e3e5;">
+                    <h3 class="mb-0 text-dark">Lista de Cantidad de Pérdida</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-end mb-3">
+                        <a href="{% url 'cantidadperdida_create' %}" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Nueva Cantidad de Pérdida
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-light">
+                                <tr class="text-dark">
+                                    <th>ID</th>
+                                    <th>Pérdida</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Costo Unitario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cantidad in cantidades %}
+                                <tr>
+                                    <td class="text-dark">{{ cantidad.id_c_perdida }}</td>
+                                    <td class="text-dark">{{ cantidad.id_perdida }}</td>
+                                    <td class="text-dark">{{ cantidad.id_producto }}</td>
+                                    <td class="text-dark">{{ cantidad.cantidad }}</td>
+                                    <td class="text-dark">{{ cantidad.costo_unitario }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No hay registros de cantidad de pérdida.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+{% endblock %}

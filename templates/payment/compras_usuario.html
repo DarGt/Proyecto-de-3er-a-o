@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <br /><br />
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <!-- Hacemos la tarjeta más ancha -->
+        <div class="card shadow-lg">
+          <div class="card-header text-center" style="background-color: #d1ecf1;">
+            <!-- Fondo azul claro -->
+            <h3 class="mb-0 text-dark">Orden: {{ order.id }} - ${{ order.amount_paid }}</h3> <!-- Texto en negro -->
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p>
+                  <strong>Correo Electrónico:</strong> {{ order.email }}
+                </p>
+                {% if order.date_shipped %}
+                  <p>
+                    <strong>Fecha de Envío:</strong> {{ order.date_shipped }}
+                  </p>
+                {% else %}
+                  <p>
+                    <strong>Fecha de Orden:</strong> {{ order.date_ordered }}
+                  </p>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <p>
+                  <strong>Nombre Completo del Usuario:</strong> {{ order.full_name }}
+                </p>
+                <p>
+                  <strong>Dirección de Envío:</strong> {{ order.shipping_address }}
+                </p>
+              </div>
+            </div>
+            <hr />
+            <h5 class="text-center">Detalles de los Productos</h5>
+            <ul class="list-group">
+              {% for item in items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <br /><br /><br />
+                  <div class="col-md-6">
+                    <span><strong>{{ item.product }}</strong></span>
+                  </div>
+                  <div class="col-md-3 text-center">
+                    <span>Cantidad: {{ item.quantity }}</span>
+                  </div>
+                  <div class="col-md-3 text-end">
+                    <span>${{ item.price }}</span>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="d-flex justify-content-end mt-4">
+              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#Correo">Enviar correo</button>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
+              <a class="btn btn-outline-danger mb-2 mb-md-0" href="{% url 'compras' %}">Retornar a compras</a>
+              <a href="{% url 'generar_pdf_recibo' order.id %}" class="btn btn-success btn-sm" target="_blank">Descargar PDF de compra</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br /><br />
+<br><br><br>
+  <div class="modal fade" id="Correo" tabindex="-1" aria-labelledby="CorreoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: rgb(108, 175, 202);">
+          <h1 class="modal-title fs-4 fw-bold text-white" id="CorreoLabel">Envío de Correo</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="row">
+          <div class="col-7 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill="rgb(137,179,128)" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+              <path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671" />
+              <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791" />
+            </svg>
+          </div>
+
+          <div class="col-5 px-3">
+            <br />
+            <h2>Formulario de Contacto</h2>
+            <hr />
+            <form action="{% url 'contact' %}" method="post" class="was-validated" novalidate>
+              {% csrf_token %}
+
+              <!-- mensajes -->
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre y Apellido</label>
+                <input type="text" class="form-control" id="name" name="name" required value="{{ user.first_name }}" />
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback">Introduzca su nombre y apellido</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required value="{{ user.email }}" />
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback">Introduzca su Correo Electrónico válido</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="subject" class="form-label">Asunto</label>
+                <input type="text" class="form-control" id="subject" name="subject" required />
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback">Introduzca el motivo de su mensaje</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="message" class="form-label">Mensaje</label>
+                <textarea class="form-control" name="message" id="message" rows="10" required></textarea>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback">Introduzca el mensaje</div>
+              </div>
+
+              <!-- Campos ocultos para los detalles de la orden -->
+              <input type="hidden" name="order_id" value="{{ order.id }}" />
+              <input type="hidden" name="amount_paid" value="{{ order.amount_paid }}" />
+              <input type="hidden" name="email" value="{{ order.email }}" />
+              <input type="hidden" name="full_name" value="{{ order.full_name }}" />
+              <input type="hidden" name="shipping_address" value="{{ order.shipping_address }}" />
+              <input type="hidden" name="date_ordered" value="{{ order.date_ordered }}" />
+              {% if order.date_shipped %}
+                <input type="hidden" name="date_shipped" value="{{ order.date_shipped }}" />
+              {% endif %}
+
+              <!-- Pasar los productos dentro de un campo oculto -->
+              {% for item in items %}
+                <input type="hidden" name="products" value="{{ item.product }} - Cantidad: {{ item.quantity }} - Precio: ${{ item.price }}" />
+              {% endfor %}
+              <button class="btn btn-primary" type="submit">Enviar Mensaje</button>
+            </form>
+            <br /><br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br /><br />
+
+
+  
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center" style="background-color: #d1ecf1;"> <!-- Fondo azul claro -->
+                    <h3 class="mb-0 text-dark">Resumen de pedido</h3> <!-- Texto en negro -->
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Nombre de producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in cart_products %}
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>
+                                    {% if producto.is_sale %}
+                                        <strike class="text-muted small"> ${{ producto.precio_venta }}</strike><br>
+                                        <span class="text-danger font-weight-bold"> ${{ producto.sale_price }}</span>
+                                    {% else %}
+                                        ${{ producto.precio_venta }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for key, value in quantities.items %}
+                                        {% if key == producto.id_producto|slugify %}
+                                            {{ value }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-4">
+                        <h3 class="text-success font-weight-bold">Total a pagar: ${{ totals }}</h3>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'cart_summary' %}" class="btn btn-warning">Retornar a carrito</a> <!-- Botón amarillo -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<br> <br> 
+
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center">
+                    <h3 class="mb-0">Informacionde envio</h3>
+                </div>
+                <div class="card-body">
+
+                    <form  method="POST" enctype="multipart/form-data" action="{% url 'billing_info' %}" >
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="shipping_form"> <!-- Identificador del formulario -->
+                        <div class="modal-body">
+                            <!-- Imagen de perfil -->
+                            <div class="d-flex justify-content-center mb-4">
+                                <img class="img-thumbnail rounded-circle" src="{{user.profile.image.url}}" alt="{{user.username}}" style="width: 120px;">
+                            </div>
+        
+                            <!-- Primera fila: Nombre, Apellido -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="shipping_full_name">Nombre Completo:</label>
+                                    <input type="text" class="form-control" name="shipping_full_name" value="{{ user.shippingaddress.shipping_full_name }}" required>
+                                </div>
+                                
+                            </div>
+                            
+                            <!-- Segunda fila: Teléfono, Código Postal -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+  <label for="telephone">Teléfono:</label>
+  <input type="tel" class="form-control" name="telephone" 
+         value="{{user.profile.telephone}}" 
+         pattern="[0-9]{10,15}" 
+         title="Ingresa solo números (mínimo 10 dígitos)" 
+         required>
+</div>
+
+                                <div class="col-md-6">
+                                    
+                                    <label for="shipping_zipcode">Código Postal:</label>
+                                     
+                                    <input type="text" class="form-control" name="shipping_zipcode" value="{{ user.shippingaddress.shipping_zipcode }}" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Espaciado y siguientes datos -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    
+                                    <label for="shipping_address1">Domicilio:</label>
+                                    <input type="text" class="form-control" name="shipping_address1" value="{{user.shippingaddress.shipping_address1}}" required>
+                                </div>
+                                
+                            </div>
+        
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="shipping_city">Ciudad:</label>
+                                    <input type="text" class="form-control" name="shipping_city" value="{{user.shippingaddress.shipping_city}}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="shipping_state">Estado:</label>
+                                    <input type="text" class="form-control" name="shipping_state" value="{{user.shippingaddress.shipping_state}}" required>
+                                </div>
+                            </div>
+        
+                            <div class="mb-3">
+                                <label for="shipping_country">País:</label>
+                                <input type="text" class="form-control" name="shipping_country" value="{{user.shippingaddress.shipping_country}}" required>
+                            </div>
+        
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="shipping_email">Correo:</label>
+                                <input type="text" class="form-control" name="shipping_email" value="{{user.email}}" readonly>
+                            </div>
+                        </div>
+        
+                        <!-- Botones al final -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Continuar Para Realizar Pago</button>
+                        </div>
+                    </form>
+                   
+
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ <br> <br>
+
+
+
+{% endblock %}
