@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'accounts.apps.AccountsConfig',
-
+    #Nuevas librerias
+    'rest_framework',
+    'django_filters',
     'import_export',
 
     'guardar',
@@ -159,7 +161,7 @@ LOGOUT_REDIRECT_URL = "index"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # !!!!!!!
 #!!! claves que despues os. para que no se vean despues Cambiar¡
 #claves de stripe
-STRIPE_SECRET_KEY = 'AQUI_IRA_LA_CLAVE_EN_PRODUCCION'
+STRIPE_SECRET_KEY = 'AQUI_IRA_LA_CLAVE_EN_PRODUCCION'11
 STRIPE_SECRET_KEY = 'AQUI_IRA_LA_CLAVE_EN_PRODUCCION'
 STRIPE_API_VERSION = '2022-11-15'
 
