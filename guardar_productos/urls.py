@@ -10,11 +10,13 @@ from django.conf.urls.static import static
 from accounts.views import UserListAPI
 from payment.views import GenerarPDFReciboView
 from guardar.views import ProductoListAPI
+from core.views import OrderSerializerAPI
 urlpatterns = [
      
      #Api ruta prueba
      path('api/productos/', ProductoListAPI.as_view(), name='api_productos_list'),
      path('api/usuarios/', UserListAPI.as_view(), name='api_usuarios_list'),
+     path('api/ordenes/', OrderSerializerAPI.as_view(), name='api_ordenes_list'),
      
      
      

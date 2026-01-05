@@ -7,7 +7,7 @@ import datetime
 
 class Order(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
-    usuaio = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=1)
     direccion = models.CharField(max_length=100, default=" ", blank=True)
     telefono = models.CharField(max_length=20, default=" ", blank=True)

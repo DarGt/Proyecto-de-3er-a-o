@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'guardar_productos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Motor de base de datos
-        'NAME': 'final',
+        'NAME': 'p13',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',

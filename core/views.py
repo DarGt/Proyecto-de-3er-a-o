@@ -41,6 +41,10 @@ from django.contrib.auth.decorators import user_passes_test
 from datetime import date, timedelta
 from accounts.models import EstadoCuentaUsuario 
 
+from .serializers import OrderSerializer
+from rest_framework import generics
+
+
 # Create your views here.
 
 @csrf_exempt
@@ -116,6 +120,10 @@ def add_group_name_to_context(view_class):
     view_class.dispatch = dispatch
     return view_class
 
+@add_group_name_to_context
+class OrderSerializerAPI(generics.ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 @add_group_name_to_context
 class Principal(TemplateView):
