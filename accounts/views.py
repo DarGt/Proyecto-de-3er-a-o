@@ -57,10 +57,15 @@ class GenerarPDFUsuarioView(View):
         return response
 
 @add_group_name_to_context
-class UserListAPI(generics.ListAPIView):
+class UserListAPI(generics.ListCreateAPIView):
     
     queryset = Usuario.objects.all()
     serializer_class = usuarioSerializer
+@add_group_name_to_context
+class UsuarioDetailAPI(generics.RetrieveUpdateDestroyAPIView): # <--- Cambio aquí
+    queryset = Usuario.objects.all()
+    serializer_class = usuarioSerializer
+    lookup_field = 'id_usuario'
 
 @add_group_name_to_context
 class GenerarPDFUsuariosAdminView(View):

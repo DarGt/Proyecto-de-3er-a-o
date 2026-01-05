@@ -16,10 +16,15 @@ from rest_framework import generics
 from .serializers import ProductoSerializer
 
 @add_group_name_to_context
-class ProductoListAPI(generics.ListAPIView):
+class ProductoListAPI(generics.ListCreateAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
-
+    
+@add_group_name_to_context
+class ProductoDetailAPI(generics.RetrieveUpdateDestroyAPIView): # <--- Cambio aquí
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
+    lookup_field = 'id_producto'
 
 class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
     def test_func(self):

@@ -7,9 +7,9 @@ from guardar.views import GenerarPDFView, ProductosPorAgotarseView
 
 from accounts.views import GenerarPDFUsuarioView, GenerarPDFUsuariosAdminView
 from django.conf.urls.static import static
-from accounts.views import UserListAPI
+from accounts.views import UserListAPI, UsuarioDetailAPI
 from payment.views import GenerarPDFReciboView
-from guardar.views import ProductoListAPI
+from guardar.views import ProductoListAPI, ProductoDetailAPI
 from core.views import OrderSerializerAPI
 urlpatterns = [
      
@@ -17,10 +17,9 @@ urlpatterns = [
      path('api/productos/', ProductoListAPI.as_view(), name='api_productos_list'),
      path('api/usuarios/', UserListAPI.as_view(), name='api_usuarios_list'),
      path('api/ordenes/', OrderSerializerAPI.as_view(), name='api_ordenes_list'),
-     
-     
-     
-     
+     # urls.py
+     path('api/productos/<int:id_producto>/', ProductoDetailAPI.as_view(), name='api_productos_detail'),
+     path('api/usuarios/<int:id_usuario>/', UsuarioDetailAPI.as_view(), name='api_usuarios_detail'),
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
