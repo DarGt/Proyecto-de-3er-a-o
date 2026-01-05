@@ -8,7 +8,15 @@ from guardar.views import GenerarPDFView, ProductosPorAgotarseView
 from accounts.views import GenerarPDFUsuarioView, GenerarPDFUsuariosAdminView
 from django.conf.urls.static import static
 from payment.views import GenerarPDFReciboView
+from guardar.views import ProductoListAPI
 urlpatterns = [
+     
+     #Api ruta prueba
+     path('api/productos/', ProductoListAPI.as_view(), name='api_productos_list'),
+     
+     
+     
+     
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('accounts/', include('django.contrib.auth.urls')),

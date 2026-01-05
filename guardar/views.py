@@ -12,6 +12,14 @@ from weasyprint import HTML
 from core.views import add_group_name_to_context
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.templatetags.static import static
+from rest_framework import generics
+from .serializers import ProductoSerializer
+
+@add_group_name_to_context
+class ProductoListAPI(generics.ListAPIView):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
+
 
 class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
     def test_func(self):
