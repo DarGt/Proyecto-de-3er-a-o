@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.templatetags.static import static
 from weasyprint import HTML
 from .models import Usuario
+from .serializers import usuarioSerializer
+from rest_framework import generics
 # Create your views here.
 
 
@@ -22,6 +24,8 @@ def add_group_name_to_context(view_class):
 
     view_class.dispatch = dispatch
     return view_class
+
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -52,6 +56,11 @@ class GenerarPDFUsuarioView(View):
         HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf(response)
         return response
 
+@add_group_name_to_context
+class UserListAPI(generics.ListAPIView):
+    
+    queryset = Usuario.objects.all()
+    serializer_class = usuarioSerializer
 
 @add_group_name_to_context
 class GenerarPDFUsuariosAdminView(View):

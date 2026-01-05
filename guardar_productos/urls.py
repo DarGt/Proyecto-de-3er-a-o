@@ -7,12 +7,14 @@ from guardar.views import GenerarPDFView, ProductosPorAgotarseView
 
 from accounts.views import GenerarPDFUsuarioView, GenerarPDFUsuariosAdminView
 from django.conf.urls.static import static
+from accounts.views import UserListAPI
 from payment.views import GenerarPDFReciboView
 from guardar.views import ProductoListAPI
 urlpatterns = [
      
      #Api ruta prueba
      path('api/productos/', ProductoListAPI.as_view(), name='api_productos_list'),
+     path('api/usuarios/', UserListAPI.as_view(), name='api_usuarios_list'),
      
      
      
