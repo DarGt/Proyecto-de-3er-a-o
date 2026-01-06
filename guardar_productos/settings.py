@@ -50,10 +50,27 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'core',
     'cart',
-    'payment'
-
-
+    'payment',
+    
 ]
+# settings.py
+
+REST_FRAMEWORK = {
+    # 1. Permission: Who can touch the API?
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated', # Only logged in users / Solo usuarios logueados
+    ],
+    # 2. Authentication: How do they log in?
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication', # For testing (Postman) / Para pruebas
+        'rest_framework.authentication.SessionAuthentication', # For browser / Para el navegador
+    ],
+    
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE':1,
+    
+}
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

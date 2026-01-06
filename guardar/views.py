@@ -12,19 +12,29 @@ from weasyprint import HTML
 from core.views import add_group_name_to_context
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.templatetags.static import static
-from rest_framework import generics
+from rest_framework import generics, permissions, filters
 from .serializers import ProductoSerializer
+
 
 @add_group_name_to_context
 class ProductoListAPI(generics.ListCreateAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
-    
+    # 2. Configurar permisos específicos para esta vista
+    # IsAuthenticatedOrReadOnly: 
+    #   - Si vienes a LEER (Get): Pasa, no importa quién seas.
+    #   - Si vienes a ESCRIBIR (Post): Identifícate primero.
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # Motor de busqueda
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombre', 'descripcion',]
+
 @add_group_name_to_context
 class ProductoDetailAPI(generics.RetrieveUpdateDestroyAPIView): # <--- Cambio aquí
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
     lookup_field = 'id_producto'
+    permission_classes = [permissions.IsAdminUser]
 
 class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
     def test_func(self):
