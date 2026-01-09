@@ -62,6 +62,7 @@ REST_FRAMEWORK = {
     ],
     # 2. Authentication: How do they log in?
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication', # For testing (Postman) / Para pruebas
         'rest_framework.authentication.SessionAuthentication', # For browser / Para el navegador
     ],

@@ -4,7 +4,10 @@ from guardar import views
 from django.conf import settings
 from django.contrib.staticfiles.urls import static
 from guardar.views import GenerarPDFView, ProductosPorAgotarseView
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from accounts.views import GenerarPDFUsuarioView, GenerarPDFUsuariosAdminView
 from django.conf.urls.static import static
 from accounts.views import UserListAPI, UsuarioDetailAPI
@@ -12,6 +15,11 @@ from payment.views import GenerarPDFReciboView
 from guardar.views import ProductoListAPI, ProductoDetailAPI
 from core.views import OrderSerializerAPI
 urlpatterns = [
+     # --- NUEVAS RUTAS DE AUTENTICACIÓN ---
+    # Esta es la ruta para hacer "Login" y recibir el token
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # Esta es para refrescar el token cuando caduca (avanzado, pero bueno tenerla)
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
      
      #Api ruta prueba
      path('api/productos/', ProductoListAPI.as_view(), name='api_productos_list'),
