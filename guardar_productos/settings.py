@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     #Nuevas librerias
     'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_yasg',
     'django_filters',
     'import_export',
 
@@ -54,7 +56,15 @@ INSTALLED_APPS = [
     
 ]
 # settings.py
-
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 REST_FRAMEWORK = {
     # 1. Permission: Who can touch the API?
     'DEFAULT_PERMISSION_CLASSES': [
@@ -71,6 +81,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE':1,
     
 }
+
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
