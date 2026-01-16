@@ -83,6 +83,12 @@ urlpatterns = [
     path('perdidas/nueva/', views.PerdidaCreateView.as_view(), name='perdida_create'),
     path('cantidadperdida/', views.CantidadPerdidaListView.as_view(), name='cantidadperdida_list'),
     path('cantidadperdida/nueva/', views.CantidadPerdidaCreateView.as_view(), name='cantidadperdida_create'),
+    
+    # ... tus otras rutas ...
+    
+    # Ruta NUEVA exclusiva para la App Móvil (devuelve JSON, no HTML)
+    path('api/movil/productos/', views.api_productos_flutter, name='api_productos_movil'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

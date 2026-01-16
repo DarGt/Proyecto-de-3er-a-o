@@ -12,6 +12,9 @@ from weasyprint import HTML
 from core.views import add_group_name_to_context
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.templatetags.static import static
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework import generics, permissions, filters
 from .serializers import ProductoSerializer
 
@@ -35,6 +38,16 @@ class ProductoDetailAPI(generics.RetrieveUpdateDestroyAPIView): # <--- Cambio aq
     serializer_class = ProductoSerializer
     lookup_field = 'id_producto'
     permission_classes = [permissions.IsAdminUser]
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) # Solo con Token
+def api_productos_flutter(request):
+    # Buscamos todos los productos
+    productos = Producto.objects.all()
+    # Usamos tu serializer existente para convertirlos a JSON
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
 
 class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
     def test_func(self):
