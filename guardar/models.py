@@ -158,3 +158,26 @@ class DetallesCambio(models.Model):
     cantidad = models.IntegerField()
     id_usuario = models.ForeignKey(
         Usuario, on_delete=models.SET_NULL, null=True)
+
+
+# --- AGREGAR AL FINAL DE models.py ---
+
+class Venta(models.Model):
+    id_venta = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) # Tu modelo de usuario
+    fecha = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return f"Venta #{self.id_venta} - {self.fecha.strftime('%d/%m/%Y')}"
+
+class DetalleVenta(models.Model):
+    id_detalle = models.AutoField(primary_key=True)
+    venta = models.ForeignKey(Venta, related_name='detalles', on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    cantidad = models.IntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2) # Guardamos el precio del momento de la compra
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.cantidad}x {self.producto.nombre} en Venta #{self.venta.id_venta}"

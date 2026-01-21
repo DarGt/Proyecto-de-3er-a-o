@@ -12,7 +12,7 @@ from accounts.views import GenerarPDFUsuarioView, GenerarPDFUsuariosAdminView
 from django.conf.urls.static import static
 from accounts.views import UserListAPI, UsuarioDetailAPI
 from payment.views import GenerarPDFReciboView
-from guardar.views import ProductoListAPI, ProductoDetailAPI
+from guardar.views import ProductoListAPI, ProductoDetailAPI, api_registrar_venta
 from core.views import OrderSerializerAPI
 #Importaciones para la documentación de la API
 from rest_framework import permissions
@@ -88,6 +88,9 @@ urlpatterns = [
     
     # Ruta NUEVA exclusiva para la App Móvil (devuelve JSON, no HTML)
     path('api/movil/productos/', views.api_productos_flutter, name='api_productos_movil'),
+    path('api/crear_venta/', api_registrar_venta, name='api_crear_venta'),
+    
+    
 
 ]
 if settings.DEBUG:

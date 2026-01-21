@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from .forms import ProductosForm, PerdidaForm, CantidadPerdidaForm, DetalleProveedorForm
-from .models import Producto, SugerenciaEliminacion, Perdida, CantidadPerdida, DetalleProveedor
+from .models import Producto, SugerenciaEliminacion, Perdida, CantidadPerdida, DetalleProveedor, Venta, DetalleVenta
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -17,7 +17,60 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics, permissions, filters
 from .serializers import ProductoSerializer
+from django.db import transaction # Vital para evitar errores de dinero/stock
 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_registrar_venta(request):
+    data = request.data
+    items = data.get('items', []) # Flutter envía: [{'id': 1, 'cantidad': 2}, ...]
+    total_venta = data.get('total', 0)
+
+    if not items:
+        return Response({"error": "El carrito está vacío"}, status=400)
+
+    try:
+        with transaction.atomic():
+            # 1. Crear la Venta
+            venta = Venta.objects.create(
+                usuario=request.user, # Usa el usuario logueado (token)
+                total=total_venta
+            )
+
+            # 2. Procesar cada producto
+            for item in items:
+                # OJO: Flutter envía 'id', pero tu modelo usa 'id_producto'
+                prod_id = item['id'] 
+                cantidad = item['cantidad']
+
+                # Bloqueo de base de datos para evitar errores de concurrencia
+                producto = Producto.objects.select_for_update().get(pk=prod_id)
+
+                # 3. Validar Stock (Usando tu campo 'existencia')
+                if producto.existencia < cantidad:
+                    raise Exception(f"Stock insuficiente para {producto.nombre}. Disponibles: {producto.existencia}")
+
+                # 4. Restar Stock
+                producto.existencia -= cantidad
+                producto.save()
+
+                # 5. Guardar Detalle (Usando tu campo 'precio_venta')
+                DetalleVenta.objects.create(
+                    venta=venta,
+                    producto=producto,
+                    cantidad=cantidad,
+                    precio_unitario=producto.precio_venta,
+                    subtotal=producto.precio_venta * cantidad
+                )
+
+            return Response({"mensaje": "Venta exitosa", "id_venta": venta.id_venta}, status=200)
+
+    except Producto.DoesNotExist:
+        return Response({"error": "Producto no encontrado"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)
 
 @add_group_name_to_context
 class ProductoListAPI(generics.ListCreateAPIView):
