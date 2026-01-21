@@ -103,12 +103,7 @@ class Producto(models.Model):
         super().delete(using=using, keep_parents=keep_parents)
     _ultimo_guardado = 0 
     
-    def save(self, *args, **kwargs):
-        tiempo_actual = time.time()
-        if tiempo_actual - Producto._ultimo_guardado < 2:
-            raise ValidationError("Debes esperar 2 segundos antes de agregar otro producto.")
-        super().save(*args, **kwargs)
-        Producto._ultimo_guardado = tiempo_actual
+    
 
 class Perdida(models.Model):
     id_perdida = models.AutoField(primary_key=True)
