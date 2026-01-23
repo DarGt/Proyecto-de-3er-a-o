@@ -73,6 +73,15 @@ def api_registrar_venta(request):
         return Response({"error": str(e)}, status=400)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_datos_usuario(request):
+    # request.user ya contiene al usuario gracias al Token
+    return Response({
+        "username": request.user.username,
+        "email": request.user.email,
+        # "nombre": request.user.first_name, # Opcional si usas nombres
+    })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
