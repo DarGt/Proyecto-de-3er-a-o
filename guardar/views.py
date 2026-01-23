@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics, permissions, filters
-from .serializers import ProductoSerializer
+from .serializers import ProductoSerializer, VentaSerializer, DetalleVentaSerializer
 from django.db import transaction # Vital para evitar errores de dinero/stock
 
 
@@ -72,6 +72,16 @@ def api_registrar_venta(request):
     except Exception as e:
         return Response({"error": str(e)}, status=400)
 
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mis_compras(request):
+    # Filtramos solo las ventas del usuario logueado (request.user)
+    # .order_by('-fecha') hace que salgan las más nuevas primero
+    ventas = Venta.objects.filter(usuario=request.user).order_by('-fecha')
+    serializer = VentaSerializer(ventas, many=True)
+    return Response(serializer.data)
 @add_group_name_to_context
 class ProductoListAPI(generics.ListCreateAPIView):
     queryset = Producto.objects.all()

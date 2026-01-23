@@ -89,7 +89,7 @@ urlpatterns = [
     # Ruta NUEVA exclusiva para la App Móvil (devuelve JSON, no HTML)
     path('api/movil/productos/', views.api_productos_flutter, name='api_productos_movil'),
     path('api/crear_venta/', api_registrar_venta, name='api_crear_venta'),
-    
+    path('api/mis_compras/', views.api_mis_compras, name='api_mis_compras'),
     
 
 ]
