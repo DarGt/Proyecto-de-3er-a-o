@@ -18,7 +18,8 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions, filters
 from .serializers import ProductoSerializer, VentaSerializer, DetalleVentaSerializer
 from django.db import transaction # Vital para evitar errores de dinero/stock
-
+from django.db.models import Sum, Count # Para sumar y contar
+from django.contrib.auth.models import User
 
 
 @api_view(['POST'])
@@ -120,6 +121,29 @@ def api_productos_flutter(request):
     # Usamos tu serializer existente para convertirlos a JSON
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_dashboard_stats(request):
+    # 1. Calcular Total Vendido (Suma de la columna 'total' de todas las ventas)
+    total_ventas = Venta.objects.aggregate(Sum('total'))['total__sum'] or 0
+    
+    # 2. Contar Productos con stock crítico (menos de 5 unidades)
+    # Ajusta 'existencia' si tu campo se llama 'stock'
+    productos_bajos = Producto.objects.filter(existencia__lt=5).count()
+    
+    # 3. Contar total de productos activos
+    total_productos = Producto.objects.count()
+    
+    # 4. Contar clientes (excluyendo superusuarios/admins si quieres)
+    total_clientes = User.objects.filter(is_superuser=False).count()
+
+    return Response({
+        "dinero_total": total_ventas,
+        "stock_bajo": productos_bajos,
+        "total_productos": total_productos,
+        "total_clientes": total_clientes
+    })
 
 class AdminOrAlmacenistaRequiredMixin(UserPassesTestMixin):
     def test_func(self):

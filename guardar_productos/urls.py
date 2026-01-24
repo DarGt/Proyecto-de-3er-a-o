@@ -91,6 +91,7 @@ urlpatterns = [
     path('api/crear_venta/', api_registrar_venta, name='api_crear_venta'),
     path('api/mis_compras/', views.api_mis_compras, name='api_mis_compras'),
     path('api/usuario/', views.api_datos_usuario, name='api_datos_usuario'),
+    path('api/dashboard/', views.api_dashboard_stats, name='api_dashboard_stats'),
 
 ]
 if settings.DEBUG:
