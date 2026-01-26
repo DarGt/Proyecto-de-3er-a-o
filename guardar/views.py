@@ -83,6 +83,21 @@ def api_datos_usuario(request):
         "email": request.user.email,
         # "nombre": request.user.first_name, # Opcional si usas nombres
     })
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_datos_usuario(request):
+    # Obtenemos los nombres de los grupos: ['administrativos', 'almacen', etc]
+    roles = list(request.user.groups.values_list('name', flat=True))
+    
+    # Si no tiene grupo, asumimos que es 'usuarios' (Cliente) por defecto
+    if not roles:
+        roles = ['usuarios']
+
+    return Response({
+        "username": request.user.username,
+        "email": request.user.email,
+        "roles": roles, # Enviamos la lista a la App
+    })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
